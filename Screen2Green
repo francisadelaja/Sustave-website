@@ -1,464 +1,632 @@
 <!DOCTYPE html>
-<html class="dark" lang="en"><head>
+
+<html lang="en"><head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>Sustave | Impact Simulation Dashboard</title>
+<title>Screen2Green Hub &amp; Impact Dashboard</title>
 <link href="https://fonts.googleapis.com" rel="preconnect"/>
 <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&amp;display=swap" rel="stylesheet"/>
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-<script id="tailwind-config">
-      tailwind.config = {
-        darkMode: "class",
-        theme: {
-          extend: {
-            colors: {
-              "primary": "#13ec5b",
-              "background-light": "#f6f8f6",
-              "background-dark": "#102216",
-              "surface-dark": "#1A2F23", 
-              "surface-light": "#FFFFFF",
+<script id="tailwind-config">tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#10b981",
+                        "background-light": "#fcfdfd",
+                        "background-dark": "#022c22",
+                        "accent-orange": "#f97316",
+                        "accent-blue": "#0ea5e9",
+                        "accent-terracotta": "#c2410c",
+                        "deep-forest": "#064e3b"
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.5rem",
+                        "lg": "1rem",
+                        "xl": "1.5rem",
+                        "2xl": "2rem",
+                        "full": "9999px"
+                    },
+                    backgroundImage: {
+                        'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
+                        'lush-multi': 'linear-gradient(135deg, #064e3b 0%, #022c22 100%)',
+                        'vibrant-sunset': 'linear-gradient(to right, #f97316, #c2410c)',
+                    }
+                },
             },
-            fontFamily: {
-              "display": ["Space Grotesk", "sans-serif"]
-            },
-            borderRadius: {"DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "2xl": "2rem", "full": "9999px"},
-          },
-        },
-      }
-    </script>
-<style>input[type=range]::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            height: 24px;
-            width: 24px;
-            border-radius: 50%;
-            background: #13ec5b;
-            cursor: pointer;
-            margin-top: -10px; 
-            box-shadow: 0 0 15px rgba(19, 236, 91, 0.6);
-            border: 2px solid #102216;
+        }</script>
+<style>@keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+            100% { transform: translateY(0px); }
         }
-        input[type=range]::-webkit-slider-runnable-track {
-            width: 100%;
-            height: 4px;
-            cursor: pointer;
-            background: #2D4A35;
-            border-radius: 2px;
+        .animate-float {
+            animation: float 6s ease-in-out infinite;
         }
+        @keyframes drift {
+            0% { transform: translate(0, 0) rotate(0deg); opacity: 0; }
+            10% { opacity: 0.4; }
+            90% { opacity: 0.4; }
+            100% { transform: translate(100px, -100px) rotate(45deg); opacity: 0; }
+        }
+        .leaf {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background-color: #4ade80;
+            border-radius: 20px 0px;
+            opacity: 0;
+            pointer-events: none;
+        }
+        .leaf:nth-child(1) { left: 10%; bottom: 10%; animation: drift 12s linear infinite; animation-delay: 0s; }
+        .leaf:nth-child(2) { left: 30%; bottom: 20%; animation: drift 15s linear infinite; animation-delay: 2s; }
+        .leaf:nth-child(3) { left: 70%; bottom: 15%; animation: drift 10s linear infinite; animation-delay: 4s; }
+        .leaf:nth-child(4) { left: 90%; bottom: 25%; animation: drift 18s linear infinite; animation-delay: 1s; }
         .glass-panel {
-            background: rgba(26, 47, 35, 0.7);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.4);
         }
-        .glow-text {
-            text-shadow: 0 0 20px rgba(19, 236, 91, 0.3);
+        .dark .glass-panel {
+            background: rgba(6, 78, 59, 0.6);
+            border: 1px solid rgba(74, 222, 128, 0.1);
         }
-    </style>
+        .lush-gradient {
+            background: linear-gradient(135deg, #064e3b 0%, #022c22 100%);
+        }</style>
 </head>
-<body class="bg-background-light dark:bg-background-dark text-slate-800 dark:text-gray-200 font-display antialiased min-h-screen selection:bg-primary selection:text-black flex flex-col">
-<nav class="sticky top-0 z-50 w-full border-b border-white/5 glass-panel">
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-<div class="flex items-center justify-between h-20">
-<a class="flex items-center group transition-transform active:scale-95" href="#">
-<img alt="Sustave Logo" class="h-10 md:h-12 w-auto object-contain" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD_aP5aA7m5CV53yexRvAJzC7uGAGQxnMS5ZcMAGey4a4p7rewxb4Z1R3lTHuPh6TpPvROeS89nXZ_sV5Fm8COLViW8QPucQklzCub1O2isWZt4nxSJptNmbjhScUFJRG5KYarSLPxiy-hXEwCAqmhEXh37tJHgXXtXGwUWIuatGqIIDL_TkqfpWbxyW1m8fL6BWCcRD0KcKVs0mmhv4N3mDpy5KgaWPoAjEa0MTcGIoVhJyjEX5785u8Hu7YoNd0SHHTfh52sUBEs"/>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 font-display overflow-x-hidden relative transition-colors duration-300">
+<div class="fixed inset-0 pointer-events-none overflow-hidden z-0">
+<div class="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-[#f8fafc] to-[#ecfdf5] dark:from-[#064e3b] dark:to-[#022c22] -z-10"></div>
+<div class="leaf"></div>
+<div class="leaf"></div>
+<div class="leaf"></div>
+<div class="leaf"></div>
+<div class="absolute -top-[20%] right-[10%] w-[600px] h-[600px] bg-primary/10 rounded-full blur-[120px]"></div>
+<div class="absolute bottom-[10%] left-[5%] w-[400px] h-[400px] bg-primary/10 rounded-full blur-[100px]"></div>
+</div>
+<div class="relative z-10 flex flex-col min-h-screen">
+<header class="sticky top-0 z-50 glass-panel border-b border-white/20 dark:border-white/10">
+<div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+<a class="flex items-center gap-3 hover:opacity-80 transition-opacity" href="#">
+<img alt="Screen2Green Logo" class="h-10 w-auto" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBVJ8EumNWzcgbW3OM1iEsJ-HF636P8DCAhGBhKJqzV0IwqImZ1WrMz-1jA_pnJx6u5lVf6Fx4JdewtSrlquA2WpAXBMJcN1SOX56LAbOm3r6c3y5Up1iFHkWXhCvm42trTQ-9Rm99bcrCdKqOXs6oqYnGAY0Olfth0NQTWbe1kPu5xFDkIUt55VxpAHP1u1zXWm0eze5UmVWh5b1vmo9nn-ftF7h2mZkD7IOG-RxsDmypkJY4cEACGSyjngyLJHjEnO6qAVne7zvY"/>
 </a>
-<div class="flex items-center gap-6">
-<div class="hidden md:flex items-center gap-6 text-sm font-medium text-gray-400">
-<a class="hover:text-white transition-colors" href="#">Screen2Green</a>
-<a class="hover:text-white transition-colors" href="#">Marketplace</a>
-<a class="hover:text-white transition-colors" href="#">Governance</a>
-</div>
-<div class="h-6 w-px bg-white/10 hidden md:block"></div>
-<button class="flex items-center gap-2 px-4 py-2 rounded-lg bg-surface-dark border border-primary/20 hover:border-primary/50 text-white transition-all group hover:bg-surface-dark/80">
-<div class="relative flex items-center justify-center">
-<span class="absolute w-2 h-2 rounded-full bg-primary animate-ping opacity-75"></span>
-<span class="relative w-2 h-2 rounded-full bg-primary"></span>
-</div>
-<span class="text-sm font-medium ml-1">0x4a...8921</span>
-<span class="material-icons-round text-gray-400 group-hover:text-primary text-base">expand_more</span>
-</button>
-<div class="w-10 h-10 rounded-full bg-gradient-to-br from-primary to-green-800 p-0.5 cursor-pointer hover:shadow-[0_0_15px_rgba(19,236,91,0.3)] transition-shadow">
-<img alt="User Profile" class="w-full h-full rounded-full object-cover" data-alt="Portrait of a user in a profile circle" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBqOXLrqzP7iN59Hc0VE9Fj0wmpfBFjNqgQlRBbeWfVZigdYwmmvmdGpXq1diBtaI9_CyKaRulS705u-_HkFihn-RaRGRZ1YacI4XgywjW4N3PijRVacGlWXelui3HXA29qwnDAsAB9S2cS7G_tmPdyGl2Z2rHmQRCDivEn1wOTjUnF83JB0sPgFX-YRVSHsJTWTuc042a4iM1fh-T9EGf7SpcImOWvoHiu29G4HOBepEXBqU9AUh18rfgRvRls0YszJcT3l9y3GLQ"/>
-</div>
-</div>
-</div>
-</div>
+<nav class="hidden md:flex items-center gap-8">
+<a class="text-sm font-medium hover:text-primary transition-colors" href="#">Home</a>
+<a class="text-sm font-medium hover:text-primary transition-colors" href="#impact">Impact</a>
+<a class="text-sm font-medium hover:text-primary transition-colors" href="#about">About</a>
+<a class="text-sm font-medium hover:text-primary transition-colors" href="#contact">Contact</a>
 </nav>
-<main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8 w-full">
-<div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
-<div>
-<div class="flex items-center gap-2 text-primary text-sm font-medium mb-2">
-<span class="px-2 py-0.5 rounded bg-primary/10 border border-primary/20 text-xs uppercase tracking-wider">Dashboard</span>
-<span class="text-gray-500">/</span>
-<span class="text-gray-300">Screen2Green</span>
-</div>
-<h1 class="text-3xl md:text-4xl font-bold text-white tracking-tight">Impact Simulation</h1>
-</div>
-<div class="flex gap-3">
-<button class="flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/10 hover:bg-white/10 text-xs text-gray-400 transition-colors">
-<span class="material-icons-round text-sm">refresh</span>
-<span>Data updated: Just now</span>
+<div class="flex items-center gap-4">
+<button class="hidden sm:flex hover:bg-emerald-400 text-deep-forest px-5 py-2.5 rounded-xl text-sm font-bold transition-all shadow-lg shadow-primary/20 bg-accent-blue">
+                        Join Waitlist
+                    </button>
+<button class="md:hidden p-2 text-slate-900 dark:text-white">
+<span class="material-symbols-outlined">menu</span>
 </button>
 </div>
 </div>
-<div class="bg-surface-dark rounded-2xl border border-white/5 grid grid-cols-2 lg:grid-cols-5 divide-y lg:divide-y-0 lg:divide-x divide-white/5 overflow-hidden shadow-xl shadow-black/20">
-<div class="p-5 flex flex-col justify-between group hover:bg-white/[0.02] transition-colors relative">
-<div class="flex items-center justify-between mb-3">
-<span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">SUS Token</span>
-<span class="material-icons-round text-primary/40 group-hover:text-primary transition-colors text-base">currency_exchange</span>
-</div>
-<div>
-<div class="text-lg font-bold text-white tracking-tight">1 SQ = $1.00</div>
-<div class="flex items-center justify-between mt-1">
-<div class="text-[10px] text-gray-500 font-mono">1 SUS = $0.000645</div>
-</div>
-<div class="text-[10px] text-primary mt-1 font-mono bg-primary/5 inline-block px-1.5 py-0.5 rounded">1 SQ = 1550 SUS</div>
-</div>
-</div>
-<div class="p-5 flex flex-col justify-between group hover:bg-white/[0.02] transition-colors relative">
-<div class="flex items-center justify-between mb-3">
-<span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Carbon</span>
-<span class="material-icons-round text-primary/40 group-hover:text-primary transition-colors text-base">co2</span>
-</div>
-<div>
-<div class="text-lg font-bold text-white tracking-tight">5 KG / YR</div>
-<div class="flex items-center justify-between mt-1">
-<div class="text-[10px] text-gray-500 font-mono">Per 1 Square</div>
-</div>
-<div class="text-[10px] text-primary mt-1 font-mono bg-primary/5 inline-block px-1.5 py-0.5 rounded">1 KG = $0.03</div>
-</div>
-</div>
-<div class="p-5 flex flex-col justify-between group hover:bg-white/[0.02] transition-colors relative">
-<div class="flex items-center justify-between mb-3">
-<span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Farm Yield</span>
-<span class="material-icons-round text-primary/40 group-hover:text-primary transition-colors text-base">agriculture</span>
-</div>
-<div>
-<div class="text-lg font-bold text-white tracking-tight">$1.30 / YR</div>
-<div class="flex items-center justify-between mt-1">
-<div class="text-[10px] text-gray-500 font-mono">Per 1 Square</div>
-</div>
-<div class="text-[10px] text-primary mt-1 font-mono bg-primary/5 inline-block px-1.5 py-0.5 rounded">1 SQ = 0.25 TREE</div>
-</div>
-</div>
-<div class="p-5 flex flex-col justify-between group hover:bg-white/[0.02] transition-colors relative">
-<div class="flex items-center justify-between mb-3">
-<span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Empowerment</span>
-<span class="material-icons-round text-primary/40 group-hover:text-primary transition-colors text-base">groups</span>
-</div>
-<div>
-<div class="text-lg font-bold text-white tracking-tight">0.00025</div>
-<div class="flex items-center justify-between mt-1">
-<div class="text-[10px] text-gray-500 font-mono">Farmer per SQ</div>
-</div>
-<div class="text-[10px] text-primary mt-1 font-mono bg-primary/5 inline-block px-1.5 py-0.5 rounded">Direct Support</div>
-</div>
-</div>
-<div class="p-5 flex flex-col justify-between group hover:bg-white/[0.02] transition-colors relative col-span-2 lg:col-span-1 border-t lg:border-t-0 border-white/5">
-<div class="flex items-center justify-between mb-3">
-<span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Impact Score</span>
-<span class="material-icons-round text-primary/40 group-hover:text-primary transition-colors text-base">military_tech</span>
-</div>
-<div>
-<div class="text-lg font-bold text-white tracking-tight">0.0001+</div>
-<div class="flex items-center justify-between mt-1">
-<div class="text-[10px] text-gray-500 font-mono">Impact Points</div>
-</div>
-<div class="text-[10px] text-primary mt-1 font-mono bg-primary/5 inline-block px-1.5 py-0.5 rounded">Gamified Growth</div>
-</div>
-</div>
-</div>
-<div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-<div class="lg:col-span-8 flex flex-col gap-8 order-2 lg:order-1">
-<div class="bg-surface-dark rounded-2xl border border-white/5 p-1 relative overflow-hidden group shadow-2xl shadow-black/30">
-<div class="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-transparent opacity-50 group-hover:opacity-100 transition-opacity"></div>
-<div class="relative bg-surface-dark/80 backdrop-blur-sm rounded-xl p-6 md:p-8">
-<div class="flex items-center justify-between mb-8">
-<h2 class="text-2xl font-bold text-white flex items-center gap-3">
-<div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
-<span class="material-icons-round text-primary">tune</span>
-</div>
-                            Impact Simulator
-                        </h2>
-<div class="text-xs font-mono text-gray-500 border border-white/10 px-2 py-1 rounded bg-black/20">ESTIMATED APY: 8.5%</div>
-</div>
-<div class="mb-10 bg-black/20 rounded-xl p-6 border border-white/5">
-<div class="flex justify-between items-end mb-6">
-<label class="text-sm text-gray-400 font-medium uppercase tracking-wider flex items-center gap-2">
-                                Investment Amount
-                                <span class="material-icons-round text-gray-600 text-xs" title="Select your investment to see impact">info</span>
-</label>
-<div class="text-3xl font-bold text-white font-mono">$<span class="text-primary">5,000</span></div>
-</div>
-<div class="relative h-10 flex items-center">
-<input class="w-full bg-gray-700 rounded-lg appearance-none h-2 z-10 relative" max="10000" min="100" type="range" value="5000"/>
-<div class="absolute w-full flex justify-between px-1 top-1/2 -translate-y-1/2 pointer-events-none opacity-30">
-<div class="w-1 h-1 bg-white rounded-full"></div>
-<div class="w-1 h-1 bg-white rounded-full"></div>
-<div class="w-1 h-1 bg-white rounded-full"></div>
-<div class="w-1 h-1 bg-white rounded-full"></div>
-<div class="w-1 h-1 bg-white rounded-full"></div>
-</div>
-</div>
-<div class="flex justify-between mt-1 text-xs text-gray-500 font-mono">
-<span>$100</span>
-<span class="text-gray-600">Min</span>
-<span class="text-gray-600">Max</span>
-<span>$10,000</span>
-</div>
-</div>
-<div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-<div class="bg-gradient-to-br from-surface-dark to-black border border-white/10 rounded-xl p-5 hover:border-primary/30 transition-all duration-300 group/card relative overflow-hidden">
-<div class="absolute top-0 right-0 w-16 h-16 bg-primary/10 blur-xl rounded-full -translate-y-1/2 translate-x-1/2"></div>
-<div class="flex flex-col h-full justify-between relative z-10">
-<div class="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary mb-3 group-hover/card:scale-110 transition-transform">
-<span class="material-icons-round">forest</span>
-</div>
-<div>
-<div class="text-3xl font-bold text-white glow-text font-mono tracking-tight">1,250</div>
-<div class="text-xs text-gray-400 uppercase tracking-widest font-bold mt-1">Trees</div>
-<div class="mt-2 pt-2 border-t border-white/5 text-[10px] text-primary/70 font-mono">+25% vs global avg</div>
-</div>
-</div>
-</div>
-<div class="bg-gradient-to-br from-surface-dark to-black border border-white/10 rounded-xl p-5 hover:border-primary/30 transition-all duration-300 group/card relative overflow-hidden">
-<div class="absolute top-0 right-0 w-16 h-16 bg-primary/10 blur-xl rounded-full -translate-y-1/2 translate-x-1/2"></div>
-<div class="flex flex-col h-full justify-between relative z-10">
-<div class="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary mb-3 group-hover/card:scale-110 transition-transform">
-<span class="material-icons-round">cloud_off</span>
-</div>
-<div>
-<div class="text-3xl font-bold text-white glow-text font-mono tracking-tight">25k</div>
-<div class="text-xs text-gray-400 uppercase tracking-widest font-bold mt-1">Kg CO2</div>
-<div class="mt-2 pt-2 border-t border-white/5 text-[10px] text-primary/70 font-mono">Offsets ~5 Cars/Yr</div>
-</div>
-</div>
-</div>
-<div class="bg-gradient-to-br from-surface-dark to-black border border-white/10 rounded-xl p-5 hover:border-primary/30 transition-all duration-300 group/card relative overflow-hidden">
-<div class="absolute top-0 right-0 w-16 h-16 bg-primary/10 blur-xl rounded-full -translate-y-1/2 translate-x-1/2"></div>
-<div class="flex flex-col h-full justify-between relative z-10">
-<div class="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary mb-3 group-hover/card:scale-110 transition-transform">
-<span class="material-icons-round">volunteer_activism</span>
-</div>
-<div>
-<div class="text-3xl font-bold text-white glow-text font-mono tracking-tight">1.25</div>
-<div class="text-xs text-gray-400 uppercase tracking-widest font-bold mt-1">Farmers</div>
-<div class="mt-2 pt-2 border-t border-white/5 text-[10px] text-primary/70 font-mono">Full Living Wage Support</div>
-</div>
-</div>
-</div>
-</div>
-<div class="mt-8 flex justify-center">
-<button class="bg-primary hover:bg-green-400 text-background-dark font-bold px-8 py-3 rounded-xl shadow-[0_0_20px_rgba(19,236,91,0.3)] hover:shadow-[0_0_30px_rgba(19,236,91,0.5)] transition-all flex items-center gap-2 transform hover:-translate-y-0.5">
-<span>Activate Simulation</span>
-<span class="material-icons-round text-lg">arrow_forward</span>
-</button>
-</div>
-</div>
-</div>
-<div class="bg-surface-dark border border-white/5 rounded-2xl p-6">
-<div class="flex items-center justify-between mb-4">
-<h3 class="text-sm font-bold text-gray-300 uppercase tracking-wider flex items-center gap-2">
-<span class="material-icons-round text-primary text-base">grid_view</span>
-                        Your Plots
-                    </h3>
-<span class="text-[10px] bg-white/5 text-gray-300 px-2 py-0.5 rounded border border-white/10">3 Owned</span>
-</div>
-<div class="grid grid-cols-2 gap-3 mb-4">
-<div class="relative aspect-square rounded-xl overflow-hidden group cursor-pointer border border-white/5 hover:border-primary/50 transition-all">
-<img alt="Aerial view of green farm plot" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDkVnk7S3FqU7-K57ji9RrOWgqDnxJwezPWaz704-9ODQYmJtW4qg4QpkHE34RyLmXeybk6IYDbtVa1VQP3sZ_RndkY2Tx-kva9pxTom_XfuJQcPCmpVmqJV18oRI0Di8gjqHayMaZvYF29LgTKeWl-seR7lOvrUstdk_i5INkdv-QDM1KAhS31sbMGBK7lAXlrHU-VIBPm1JhwDuhWba-v98ckY-XpHUogIynPu5tAe8cRSv3t_uwcS-giqlZo6GxK8pY1To7dWLk"/>
-<div class="absolute inset-0 bg-gradient-to-t from-black/90 via-transparent to-transparent flex flex-col justify-end p-3">
-<div class="text-xs text-white font-bold">Plot #124</div>
-<div class="text-[10px] text-primary">Kenya</div>
-</div>
-</div>
-<div class="relative aspect-square rounded-xl overflow-hidden group cursor-pointer border border-white/5 hover:border-primary/50 transition-all">
-<img alt="Close up of growing sapling" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDCDdB_u4muhHANg1Sm_yGZ4jJ61EwTP13cfTfdABWVybvGzWofxVXf6JnfqfLwCDaPo7oTsWHLQIVSCBQAv2EAxXW1zDFF1iEbK49zVuXoB1yv36en7MUo5VSav8lj2xI7q3cP5Rk0ozc9UKlBUTnDxHv1VC0g4NKO8z008l90T5MraDGGO9k42G6um3pK9UVLqALx230j8grFB2Pf_DVvmcmZ8sY7nRF75ke15JkrfyfYh5WT3o6deYimGO_Xfm9fHKWRbU8MJM8"/>
-<div class="absolute inset-0 bg-gradient-to-t from-black/90 via-transparent to-transparent flex flex-col justify-end p-3">
-<div class="text-xs text-white font-bold">Acacia #05</div>
-<div class="text-[10px] text-primary">Tanzania</div>
-</div>
-</div>
-</div>
-<button class="w-full py-3 text-xs font-medium text-gray-400 hover:text-white border border-dashed border-gray-700 hover:border-primary/50 hover:bg-white/5 rounded-xl transition-all flex items-center justify-center gap-2 group">
-<span class="w-5 h-5 rounded-full border border-gray-500 group-hover:border-primary flex items-center justify-center text-gray-500 group-hover:text-primary transition-colors">
-<span class="material-icons-round text-sm">add</span>
+</header>
+<section class="relative pt-16 pb-20 md:pt-24 md:pb-32 px-6">
+<div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+<div class="flex flex-col gap-6 order-2 lg:order-1">
+<div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 w-fit">
+<span class="relative flex h-2 w-2">
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75"></span>
+<span class="relative inline-flex rounded-full h-2 w-2"></span>
 </span>
-                    Mint New Plot
-                </button>
+<span class="text-xs font-bold text-green-800 dark:text-green-300 uppercase tracking-wider">Screen2Green</span>
+</div>
+<h1 class="text-4xl md:text-5xl lg:text-6xl font-black leading-[1.1] tracking-tight text-slate-900 dark:text-white">
+                        Nature-based carbon removal <span class="text-transparent bg-clip-text bg-gradient-to-r from-emerald-600 to-primary text-transparent bg-clip-text bg-gradient-to-r from-accent-orange to-accent-terracotta">powered by you</span>, rewarded through us.
+                    </h1>
+<p class="text-lg text-slate-600 dark:text-slate-300 max-w-lg leading-relaxed">
+                        Experience the future of digital carbon farming. Track your impact and yield SUS tokens directly from your device, turning screen time into green time.
+                    </p>
+<div class="flex flex-wrap gap-4 pt-2">
+<button class="hover:bg-emerald-400 px-8 py-4 rounded-xl text-base font-bold transition-all shadow-xl shadow-primary/25 hover:shadow-primary/40 flex items-center gap-2 bg-accent-orange text-white hover:bg-accent-terracotta">
+<span>Join Waitlist</span>
+<span class="material-symbols-outlined text-sm">arrow_forward</span>
+</button>
+</div>
+<div class="flex items-center gap-4 pt-6 text-sm text-slate-500 dark:text-slate-400">
+<div class="flex -space-x-2">
+<div class="w-8 h-8 rounded-full border-2 border-white dark:border-background-dark bg-gray-200 bg-cover bg-center" data-alt="User avatar 1" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDup7jr6ilO0w3ik0taCkJEAFUvqzxJNiAXFmYfuwQMRV8PjNIIBhFokL8qYedlFmvLGh9dviLt_JLeVC6V-hLTcCEpvARf-uFwC9JcX8I6UriaU1Qna1BbeWnFWoqzvEuoB75mMQQYfUcwYkNNOCDNs3WWRj-3NSErld25wM7Cnm6aAVEAQjPH6z71zJdNhy-o_elPeJ9UMA_wgTQthsMIp8snY4V9Ln7cg9Ju78-wcEDAWCx454A6LuWQozxUD3HsuT53po3qUEY')"></div>
+<div class="w-8 h-8 rounded-full border-2 border-white dark:border-background-dark bg-gray-200 bg-cover bg-center" data-alt="User avatar 2" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuClKIawVkYDLjqVH7NglER8haAa5V4L3jCJfSDM2FSlU-ObUkhGdTdPlOnHtAaHJNRYJhXfMVkSQHuPI7A40dCkDzvcVUIXHn9teCusu_AAjdUxU-5--sVntOshIZSAkaBlz5Le3rx5HGxo2cvr0K9qKqJ_miWdsE0xux-mOPGsoMzO7v98raqaugFBG1og4QaHY69uUNt4Re4-aWoVbdQED1cUafLmkuMTlVJStANx68TZBr8VcoOr3mMdXzKkRijLbvK83dI6CBs')"></div>
+<div class="w-8 h-8 rounded-full border-2 border-white dark:border-background-dark bg-gray-200 bg-cover bg-center" data-alt="User avatar 3" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuD_8_ILV41vyUIuGpf_S0_n7A0zg-BGaHxcry-sbqthSl28cv1zksgMdFeQqrE4W7FKLIGf00YuqUPuKlMOYy51LWZtxyxF-l7acOqiidJ2iWwM2fXmEgmmg4u1kRx474uhXbRczBuZEpGJCTPYJW_KQdz11Wx8iYKJdU4vaVv1ds-mdN5vBcoVnFRpnXbcJJ8lTnibSSCEx-N4kH2Pr9NUnoIfqznpj-FcjXrK6K9I4uCooCR0d29K5YHgiUW4uTaVtMyAz2__qzA')"></div>
+</div>
+<p>Join a growing network of sustainable wealth creators.</p>
 </div>
 </div>
-<div class="lg:col-span-4 flex flex-col gap-6 order-1 lg:order-2">
-<div class="bg-gradient-to-b from-[#1a3826] to-surface-dark border border-primary/20 rounded-2xl p-6 relative overflow-hidden shadow-lg">
-<div class="absolute -top-10 -right-10 w-32 h-32 bg-primary/10 rounded-full blur-2xl"></div>
-<div class="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-primary via-green-600 to-transparent"></div>
-<div class="relative z-10">
-<div class="flex items-center justify-between mb-4">
-<div class="flex items-center gap-2">
-<div class="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center">
-<span class="material-icons-round text-primary text-sm">account_balance_wallet</span>
+<div class="relative order-1 lg:order-2 flex justify-center lg:justify-end animate-float">
+<div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] bg-gradient-radial from-primary/20 to-transparent blur-3xl -z-10"></div>
+<div class="relative w-[300px] md:w-[340px] h-[600px] md:h-[680px] bg-slate-900 rounded-[3rem] border-[8px] border-slate-800 shadow-2xl overflow-hidden ring-1 ring-slate-900/5">
+<div class="absolute top-0 left-1/2 -translate-x-1/2 h-7 w-32 bg-slate-950 rounded-b-2xl z-20"></div>
+<div class="w-full h-full bg-slate-900 text-white overflow-hidden flex flex-col relative">
+<div class="h-12 w-full shrink-0"></div>
+<div class="px-6 pb-6 flex justify-between items-center">
+<div>
+<p class="text-xs text-gray-400">Total Yield</p>
+<h3 class="text-3xl font-bold text-primary">1,240 SUS</h3>
 </div>
-<span class="text-xs font-bold text-primary uppercase tracking-wider">Active Wallet</span>
+<div class="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center">
+<span class="material-symbols-outlined text-primary text-sm">notifications</span>
 </div>
-<span class="text-[10px] text-gray-400 bg-black/20 px-2 py-1 rounded">Polygon Network</span>
 </div>
-<div class="mb-6">
-<div class="text-4xl font-bold text-white font-mono tracking-tight">45,230 <span class="text-base text-gray-400 font-normal">SUS</span></div>
-<div class="text-sm text-gray-400 font-mono mt-1">≈ $29.17 USD</div>
+<div class="px-4 mb-6">
+<div class="bg-slate-800/50 rounded-2xl p-4 border border-slate-700">
+<div class="flex justify-between items-end h-32 gap-2">
+<div class="w-full bg-primary/20 rounded-t-sm h-[40%] relative group">
+<div class="absolute bottom-0 w-full h-full rounded-t-sm opacity-60"></div>
 </div>
-<div class="grid grid-cols-2 gap-3">
-<button class="flex items-center justify-center gap-2 py-2.5 rounded-xl bg-primary hover:bg-green-400 text-background-dark font-bold text-sm transition-all shadow-lg shadow-green-900/20">
-<span class="material-icons-round text-lg">add_circle</span> Top Up
+<div class="w-full bg-primary/20 rounded-t-sm h-[60%] relative group">
+<div class="absolute bottom-0 w-full h-full rounded-t-sm opacity-70"></div>
+</div>
+<div class="w-full bg-primary/20 rounded-t-sm h-[30%] relative group">
+<div class="absolute bottom-0 w-full h-full rounded-t-sm opacity-50"></div>
+</div>
+<div class="w-full bg-primary/20 rounded-t-sm h-[80%] relative group">
+<div class="absolute bottom-0 w-full h-full rounded-t-sm"></div>
+</div>
+<div class="w-full bg-primary/20 rounded-t-sm h-[50%] relative group">
+<div class="absolute bottom-0 w-full h-full rounded-t-sm opacity-60"></div>
+</div>
+</div>
+<div class="flex justify-between mt-2 text-[10px] text-gray-400 font-mono">
+<span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span>
+</div>
+</div>
+</div>
+<div class="flex-1 bg-slate-800 rounded-t-[2.5rem] p-6 overflow-hidden relative">
+<h4 class="text-sm font-semibold mb-4 text-gray-300 uppercase tracking-wide">My Digital Farms</h4>
+<div class="flex flex-col gap-4">
+<div class="flex items-center gap-4 p-3 bg-slate-700/50 rounded-xl border border-slate-600/50">
+<div class="w-12 h-12 rounded-lg bg-green-900/50 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">forest</span>
+</div>
+<div class="flex-1">
+<h5 class="font-bold text-sm">Reforestation Zone A</h5>
+<p class="text-xs text-gray-400">+12 Trees Planted</p>
+</div>
+<span class="font-mono text-primary text-sm font-bold">+45 SUS</span>
+</div>
+<div class="flex items-center gap-4 p-3 bg-slate-700/50 rounded-xl border border-slate-600/50">
+<div class="w-12 h-12 rounded-lg bg-green-900/50 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">agriculture</span>
+</div>
+<div class="flex-1">
+<h5 class="font-bold text-sm">Soil Regen Project</h5>
+<p class="text-xs text-gray-400">2.5 Tons CO2</p>
+</div>
+<span class="font-mono text-primary text-sm font-bold">+82 SUS</span>
+</div>
+<div class="flex items-center gap-4 p-3 bg-slate-700/50 rounded-xl border border-slate-600/50">
+<div class="w-12 h-12 rounded-lg bg-green-900/50 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">water_drop</span>
+</div>
+<div class="flex-1">
+<h5 class="font-bold text-sm">Water Conservation</h5>
+<p class="text-xs text-gray-400">500L Saved</p>
+</div>
+<span class="font-mono text-primary text-sm font-bold">+15 SUS</span>
+</div>
+</div>
+<div class="absolute bottom-0 left-0 w-full h-20 bg-gradient-to-t from-slate-900 to-transparent"></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="py-20 px-6 bg-white dark:bg-deep-forest relative overflow-hidden" id="impact">
+<div class="absolute top-0 right-0 p-10 opacity-10 pointer-events-none">
+<span class="material-symbols-outlined text-[300px] text-primary">public</span>
+</div>
+<div class="max-w-7xl mx-auto">
+<div class="flex flex-col gap-4 mb-16 max-w-2xl">
+<h2 class="text-3xl md:text-4xl font-black text-slate-900 dark:text-white tracking-tight">The SUS Impact</h2>
+<p class="text-lg text-slate-600 dark:text-slate-300">See how your digital actions translate into real-world ecological restoration through our transparent blockchain ledger.</p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+<div class="group relative p-8 rounded-2xl bg-background-light dark:bg-background-dark border border-slate-200 dark:border-slate-700 hover:border-primary transition-colors">
+<div class="absolute -top-6 left-8 text-slate-900 font-bold text-xl w-12 h-12 rounded-xl flex items-center justify-center shadow-lg">1</div>
+<div class="mt-4 mb-6 text-slate-900 dark:text-white">
+<span class="material-symbols-outlined text-[48px] group-hover:scale-110 transition-transform duration-300 text-accent-orange">currency_exchange</span>
+</div>
+<h3 class="text-xl font-bold mb-3 text-slate-900 dark:text-white">Token Generation</h3>
+<p class="text-slate-600 dark:text-slate-400">Earn SUS tokens for every contribution to green initiatives. Your digital footprint becomes a green thumbprint.</p>
+</div>
+<div class="group relative p-8 rounded-2xl bg-background-light dark:bg-background-dark border border-slate-200 dark:border-slate-700 hover:border-primary transition-colors">
+<div class="absolute -top-6 left-8 bg-slate-800 text-white dark:bg-slate-700 font-bold text-xl w-12 h-12 rounded-xl flex items-center justify-center shadow-lg group-hover:bg-primary group-hover:text-slate-900 transition-colors">2</div>
+<div class="mt-4 mb-6 text-slate-900 dark:text-white">
+<span class="material-symbols-outlined text-[48px] group-hover:scale-110 transition-transform duration-300 text-accent-blue">forest</span>
+</div>
+<h3 class="text-xl font-bold mb-3 text-slate-900 dark:text-white">Environmental Restoration</h3>
+<p class="text-slate-600 dark:text-slate-400">Directly fund reforestation projects and soil regeneration. We partner with vetted NGOs on the ground.</p>
+</div>
+<div class="group relative p-8 rounded-2xl bg-background-light dark:bg-background-dark border border-slate-200 dark:border-slate-700 hover:border-primary transition-colors">
+<div class="absolute -top-6 left-8 bg-slate-800 text-white dark:bg-slate-700 font-bold text-xl w-12 h-12 rounded-xl flex items-center justify-center shadow-lg group-hover:bg-primary group-hover:text-slate-900 transition-colors">3</div>
+<div class="mt-4 mb-6 text-slate-900 dark:text-white">
+<span class="material-symbols-outlined text-[48px] group-hover:scale-110 transition-transform duration-300 text-accent-terracotta">diversity_3</span>
+</div>
+<h3 class="text-xl font-bold mb-3 text-slate-900 dark:text-white">Community Growth</h3>
+<p class="text-slate-600 dark:text-slate-400">Empower local communities with sustainable income sources, creating a cycle of prosperity.</p>
+</div>
+</div>
+</div>
+</section><section class="py-20 px-6 relative overflow-hidden" id="tokenomics">
+<div class="max-w-7xl mx-auto">
+<div class="flex flex-col gap-4 mb-12 max-w-2xl">
+<div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 w-fit">
+<span class="text-xs font-bold text-green-800 dark:text-green-300 uppercase tracking-wider">Economy</span>
+</div>
+<h2 class="text-3xl md:text-4xl font-black text-slate-900 dark:text-white tracking-tight">Tokenomics &amp; Utility</h2>
+<p class="text-lg text-slate-600 dark:text-slate-300">
+                SUS is a utility token on BSC tokenizing agricultural land (1 SUS = 1 sq inch), creating a bridge between digital finance and real-world ecological value.
+            </p>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+<!-- Fundamentals & Allocation -->
+<div class="space-y-6">
+<details class="glass-panel rounded-2xl overflow-hidden group" open="">
+<summary class="flex items-center justify-between p-6 cursor-pointer list-none">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-accent-blue">analytics</span>
+<h3 class="text-xl font-bold text-slate-900 dark:text-white">Market Fundamentals</h3>
+</div>
+<span class="material-symbols-outlined transition-transform group-open:rotate-180">expand_more</span>
+</summary>
+<div class="p-6 pt-0 border-t border-white/10">
+<div class="grid grid-cols-2 gap-4">
+<div class="bg-white/40 dark:bg-black/20 p-4 rounded-xl">
+<p class="text-xs text-slate-500 uppercase font-bold">Total Supply</p>
+<p class="text-xl font-black text-slate-900 dark:text-white">155 Billion</p>
+</div>
+<div class="bg-white/40 dark:bg-black/20 p-4 rounded-xl">
+<p class="text-xs text-slate-500 uppercase font-bold">Launch Price</p>
+<p class="text-xl font-black text-slate-900 dark:text-white">$0.000645</p>
+</div>
+</div>
+</div>
+</details>
+<details class="glass-panel rounded-2xl overflow-hidden group">
+<summary class="flex items-center justify-between p-6 cursor-pointer list-none">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-accent-blue">pie_chart</span>
+<h3 class="text-xl font-bold text-slate-900 dark:text-white">Token Allocation</h3>
+</div>
+<span class="material-symbols-outlined transition-transform group-open:rotate-180">expand_more</span>
+</summary>
+<div class="p-6 pt-0 border-t border-white/10">
+<div class="space-y-3">
+<div class="flex flex-col gap-1">
+<div class="flex justify-between text-sm font-bold">
+<span>Public Sale</span>
+<span>50%</span>
+</div>
+<div class="h-2 w-full bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
+<div class="h-full" style="width: 50%"></div>
+</div>
+</div>
+<div class="flex flex-col gap-1">
+<div class="flex justify-between text-sm font-bold">
+<span>Strategic Partners</span>
+<span>20%</span>
+</div>
+<div class="h-2 w-full bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
+<div class="h-full bg-green-400" style="width: 20%"></div>
+</div>
+</div>
+<div class="flex flex-col gap-1">
+<div class="flex justify-between text-sm font-bold">
+<span>Incentives</span>
+<span>15%</span>
+</div>
+<div class="h-2 w-full bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
+<div class="h-full bg-green-200" style="width: 15%"></div>
+</div>
+</div>
+<div class="flex flex-col gap-1">
+<div class="flex justify-between text-sm font-bold">
+<span>Reserve &amp; Team</span>
+<span>15%</span>
+</div>
+<div class="h-2 w-full bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
+<div class="h-full bg-slate-400" style="width: 15%"></div>
+</div>
+</div>
+</div>
+</div>
+</details>
+</div>
+<!-- Impact & Use Cases -->
+<div class="space-y-6">
+<details class="glass-panel rounded-2xl overflow-hidden group">
+<summary class="flex items-center justify-between p-6 cursor-pointer list-none">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-accent-blue">eco</span>
+<h3 class="text-xl font-bold text-slate-900 dark:text-white">Impact per Token</h3>
+</div>
+<span class="material-symbols-outlined transition-transform group-open:rotate-180">expand_more</span>
+</summary>
+<div class="p-6 pt-0 border-t border-white/10">
+<div class="space-y-4">
+<div class="flex gap-4 items-start">
+<div class="p-2 bg-blue-500/10 rounded-lg text-blue-500">
+<span class="material-symbols-outlined">payments</span>
+</div>
+<div>
+<p class="font-bold">Financial Returns</p>
+<p class="text-sm text-slate-600 dark:text-slate-400">Estimated ~5.6% ROI through agricultural yield.</p>
+</div>
+</div>
+<div class="flex gap-4 items-start">
+<div class="p-2 bg-orange-500/10 rounded-lg text-orange-500">
+<span class="material-symbols-outlined">groups</span>
+</div>
+<div>
+<p class="font-bold">Social Impact</p>
+<p class="text-sm text-slate-600 dark:text-slate-400">Direct job creation and improved food security for local farmers.</p>
+</div>
+</div>
+<div class="flex gap-4 items-start">
+<div class="p-2 bg-green-500/10 rounded-lg text-green-500">
+<span class="material-symbols-outlined">forest</span>
+</div>
+<div>
+<p class="font-bold">Environmental Impact</p>
+<p class="text-sm text-slate-600 dark:text-slate-400">Carbon sequestration and biodiversity preservation on every sq inch.</p>
+</div>
+</div>
+</div>
+</div>
+</details>
+<details class="glass-panel rounded-2xl overflow-hidden group">
+<summary class="flex items-center justify-between p-6 cursor-pointer list-none">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-accent-blue">rocket_launch</span>
+<h3 class="text-xl font-bold text-slate-900 dark:text-white">Roadmap</h3>
+</div>
+<span class="material-symbols-outlined transition-transform group-open:rotate-180">expand_more</span>
+</summary>
+<div class="p-6 pt-0 border-t border-white/10">
+<div class="relative border-l-2 border-primary/30 ml-3 space-y-6 py-2">
+<div class="pl-6 relative">
+<div class="absolute w-4 h-4 rounded-full -left-[9px] top-1 shadow-[0_0_10px_rgba(19,236,91,0.5)]"></div>
+<p class="font-bold">Phase 1: Pilot</p>
+<p class="text-sm text-slate-600 dark:text-slate-400">Land acquisition and initial community onboarding.</p>
+</div>
+<div class="pl-6 relative">
+<div class="absolute w-4 h-4 bg-slate-300 dark:bg-slate-700 rounded-full -left-[9px] top-1"></div>
+<p class="font-bold">Phase 2: Expansion</p>
+<p class="text-sm text-slate-600 dark:text-slate-400">Scaling tech infrastructure across regional hubs.</p>
+</div>
+<div class="pl-6 relative">
+<div class="absolute w-4 h-4 bg-slate-300 dark:bg-slate-700 rounded-full -left-[9px] top-1"></div>
+<p class="font-bold">Phase 3: Long-term</p>
+<p class="text-sm text-slate-600 dark:text-slate-400">Global decentralization and full ecosystem maturity.</p>
+</div>
+</div>
+</div>
+</details>
+</div>
+</div>
+</div>
+</section>
+<section class="py-24 px-6 relative">
+<div class="max-w-4xl mx-auto">
+<div class="glass-panel rounded-3xl p-8 md:p-16 text-center shadow-2xl relative overflow-hidden lush-gradient"><div class="flex flex-wrap justify-center gap-4 mb-10">
+<div class="flex flex-col items-center">
+<div class="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl w-20 h-20 md:w-24 md:h-24 flex items-center justify-center mb-2 shadow-xl">
+<span class="text-3xl md:text-4xl font-black text-white">60</span>
+</div>
+<span class="text-xs md:text-sm font-bold uppercase tracking-widest text-emerald-200">Days</span>
+</div>
+<div class="flex flex-col items-center">
+<div class="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl w-20 h-20 md:w-24 md:h-24 flex items-center justify-center mb-2 shadow-xl">
+<span class="text-3xl md:text-4xl font-black text-white">23</span>
+</div>
+<span class="text-xs md:text-sm font-bold uppercase tracking-widest text-emerald-200">Hours</span>
+</div>
+<div class="flex flex-col items-center">
+<div class="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl w-20 h-20 md:w-24 md:h-24 flex items-center justify-center mb-2 shadow-xl">
+<span class="text-3xl md:text-4xl font-black text-white">59</span>
+</div>
+<span class="text-xs md:text-sm font-bold uppercase tracking-widest text-emerald-200">Minutes</span>
+</div>
+<div class="flex flex-col items-center">
+<div class="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl w-20 h-20 md:w-24 md:h-24 flex items-center justify-center mb-2 shadow-xl">
+<span class="text-3xl md:text-4xl font-black text-white">59</span>
+</div>
+<span class="text-xs md:text-sm font-bold uppercase tracking-widest text-emerald-200">Seconds</span>
+</div>
+</div>
+<div class="absolute top-0 left-1/2 -translate-x-1/2 w-2/3 h-1 bg-gradient-to-r from-transparent via-primary to-transparent opacity-50"></div>
+<h2 class="text-3xl md:text-5xl font-black mb-6 text-slate-900 dark:text-white tracking-tight">Join the Waitlist</h2>
+<p class="text-lg md:text-xl text-slate-600 dark:text-slate-300 mb-10 max-w-2xl mx-auto">
+                        Be the first to access Screen2Green. Secure your spot today and start earning rewards for the planet.
+                    </p>
+<div class="flex flex-col md:flex-row gap-4 max-w-lg mx-auto">
+<input class="flex-1 bg-white dark:bg-slate-800/50 border border-slate-200 dark:border-slate-600 rounded-xl px-5 py-4 text-slate-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all placeholder:text-slate-400" placeholder="Enter your email address" type="email"/>
+<button class="bg-accent-orange hover:bg-accent-terracotta text-white px-8 py-4 rounded-xl font-bold whitespace-nowrap transition-all shadow-lg hover:shadow-accent-orange/50">
+                            Secure Access
                         </button>
-<button class="flex items-center justify-center gap-2 py-2.5 rounded-xl bg-surface-light/5 hover:bg-surface-light/10 text-white font-bold text-sm transition-all border border-white/10">
-<span class="material-icons-round text-lg">swap_horiz</span> Swap
-                        </button>
+</div>
+<p class="mt-4 text-xs text-slate-500 dark:text-slate-400">No spam. Unsubscribe at any time.</p>
+</div>
+</div>
+</section>
+<section class="py-20 px-6 bg-white dark:bg-white/5">
+<div class="max-w-7xl mx-auto">
+<div class="flex flex-col items-center text-center gap-4 mb-16">
+<h2 class="text-3xl md:text-4xl font-black text-slate-900 dark:text-white tracking-tight">Scaling Impact Across Africa</h2>
+<p class="text-lg text-slate-600 dark:text-slate-300 max-w-2xl">Empowering every generation through measurable decarbonization and verifiable social impact.</p>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+<div class="flex flex-col items-center text-center hover:-translate-y-1 transition-transform group">
+<div class="w-full h-64 rounded-2xl overflow-hidden mb-6 relative shadow-lg">
+<img alt="African Farmer" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAp2wJBaQrSzchm2U6Nx8H6vkOIWDpoLBTTYh5Tsgoa-O579kqFZSHq89k6PLVG5XyIW345L8X4TlhGZEiFa9Mr1LhN0Ruq65QaCGzYpHqfRqchRUZ2jGfRkaJFxq3Ew9KRpiAPnA8IeV6oNCcrmhoSm3FjP7SHqrYruXy21ypGYfTe2Qy0gID_gn_gnTyKixNLBkGxIqWSMWFVloVUhmSrnQR-yuAKbxlCO5ODPlT8oMi_HhaWdvdDH54jpIILbPZ9QSeqo6L-PrU"/>
+<div class="absolute inset-0 bg-gradient-to-t from-slate-900/80 to-transparent"></div>
+<div class="absolute bottom-4 left-4 text-left">
+<h3 class="text-xl font-bold text-white mb-1">Farmer</h3>
+<div class="h-1 w-12 rounded-full"></div>
+</div>
+</div>
+<p class="text-sm text-slate-600 dark:text-slate-400 px-2">Boosting agricultural yields and sustainable income streams through tech.</p>
+</div>
+<div class="flex flex-col items-center text-center hover:-translate-y-1 transition-transform group">
+<div class="w-full h-64 rounded-2xl overflow-hidden mb-6 relative shadow-lg">
+<img alt="African Women" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBJ4AFJD1bx14pBOJuNkyLaKRtBZ8HK_tduJ7SGH6M4IXBOqVI0iyspwTQDrdrYuZdSEbqeH5lU3F4cG-UzEJHxzaEx0Wu_hI7k1a1n5r10ZHikW-bs8qGjlsIoWQLcfE1sJt24WJIW-Qk_9sMFNpq0mUBa1n7pc88BiXwekM3yYeov7swaSAKt2QEahDrXjXctfd90PoVENGsCGfjiBxUnEl2almxKhXRgNnOKt6yfGDWBixGQiC78AMjLmU0H7W8xOwkQy36FOFM"/>
+<div class="absolute inset-0 bg-gradient-to-t from-slate-900/80 to-transparent"></div>
+<div class="absolute bottom-4 left-4 text-left">
+<h3 class="text-xl font-bold text-white mb-1">Women</h3>
+<div class="h-1 w-12 rounded-full"></div>
+</div>
+</div>
+<p class="text-sm text-slate-600 dark:text-slate-400 px-2">Driving economic empowerment and leadership in rural communities.</p>
+</div>
+<div class="flex flex-col items-center text-center hover:-translate-y-1 transition-transform group">
+<div class="w-full h-64 rounded-2xl overflow-hidden mb-6 relative shadow-lg">
+<img alt="African Youth" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDqMy-o0PUVv6d7H7-83VKMleT5H81jw0VfgpC7_FbX912RPpFkLu1QwiH9gF9wLLY7mqG8DO2xsrUHLvNGMceU6NwW6Rbq_BfUvTrUBAfouHtjGAQxyia2aQZ2spIy418LC6ZPlaj1VsEZ-OSO08RP9fNvk26xVm3ab_SbC0thqiyph11lI_Wgl22eWgO7L9w0lnIRbC419kQ9i_WbnZ8arVTHPrJjaMiWiGCjZPxA34_3qRfL-Ige7NtQHw0-9oUcU9wrIRIUtRM"/>
+<div class="absolute inset-0 bg-gradient-to-t from-slate-900/80 to-transparent"></div>
+<div class="absolute bottom-4 left-4 text-left">
+<h3 class="text-xl font-bold text-white mb-1">Youth</h3>
+<div class="h-1 w-12 rounded-full"></div>
+</div>
+</div>
+<p class="text-sm text-slate-600 dark:text-slate-400 px-2">Fostering critical tech skills for the emerging green economy jobs.</p>
+</div>
+<div class="flex flex-col items-center text-center hover:-translate-y-1 transition-transform group">
+<div class="w-full h-64 rounded-2xl overflow-hidden mb-6 relative shadow-lg">
+<img alt="African Child" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDwot49OfHOxRvqecX0VRhz4PTL2UoFjKeiMNz6zgX0p8Pk6jEQ55SSHfpjeXWzErAgsWrUZGvcBNdeNBe0cLX9XNEOKZ5-E3Fm4EYnjOZ4n8PvZoAEap4YmB7f5EQVJ6bBNk-Ie63tUmOvKUheFG3IIDA5KJ7sLdZbrnUWYujKWlCrC7_OGFv1cqyeSKoVa5_jfdYBkpYpZUchzDJTKhIGvF57y87-LE4Sg5ariIKCRH5gf05pSt-sv7Isbu_knYHOXTd-la3mVWA"/>
+<div class="absolute inset-0 bg-gradient-to-t from-slate-900/80 to-transparent"></div>
+<div class="absolute bottom-4 left-4 text-left">
+<h3 class="text-xl font-bold text-white mb-1">Child</h3>
+<div class="h-1 w-12 rounded-full"></div>
+</div>
+</div>
+<p class="text-sm text-slate-600 dark:text-slate-400 px-2">Securing a healthier, cleaner future environment for the next generation.</p>
 </div>
 </div>
 </div>
-<div class="bg-surface-dark border border-white/5 rounded-2xl p-6 relative overflow-hidden group hover:border-primary/20 transition-colors">
-<div class="absolute inset-0 bg-gradient-to-r from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
-<div class="flex items-center gap-5 relative z-10">
-<div class="relative w-16 h-16 flex-shrink-0">
-<svg class="w-full h-full transform -rotate-90">
-<circle class="text-gray-800" cx="32" cy="32" fill="transparent" r="28" stroke="currentColor" stroke-width="6"></circle>
-<circle class="text-primary" cx="32" cy="32" fill="transparent" r="28" stroke="currentColor" stroke-dasharray="175.9" stroke-dashoffset="40" stroke-linecap="round" stroke-width="6"></circle>
-</svg>
-<div class="absolute inset-0 flex items-center justify-center flex-col">
-<span class="text-[10px] font-bold text-white">Lvl</span>
-<span class="text-lg font-bold text-primary leading-none">3</span>
+</section>
+<section class="py-20 px-6" id="contact">
+<div class="max-w-3xl mx-auto">
+<div class="text-center mb-10">
+<h2 class="text-3xl font-black text-slate-900 dark:text-white mb-3">Get in Touch</h2>
+<p class="text-slate-600 dark:text-slate-400">Have questions about Screen2Green? We're here to help.</p>
+</div>
+<form action="mailto:info@sustave.com" class="glass-panel p-8 rounded-2xl border border-slate-200 dark:border-slate-700" enctype="text/plain" method="post">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+<div class="flex flex-col gap-2">
+<label class="text-sm font-bold text-slate-900 dark:text-slate-200" for="name">Name</label>
+<input class="w-full bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 rounded-lg px-4 py-3 focus:ring-2 focus:ring-primary focus:border-primary outline-none text-slate-900 dark:text-white" id="name" name="name" placeholder="Jane Doe" required="" type="text"/>
+</div>
+<div class="flex flex-col gap-2">
+<label class="text-sm font-bold text-slate-900 dark:text-slate-200" for="email">Email</label>
+<input class="w-full bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 rounded-lg px-4 py-3 focus:ring-2 focus:ring-primary focus:border-primary outline-none text-slate-900 dark:text-white" id="email" name="email" placeholder="jane@example.com" required="" type="email"/>
 </div>
 </div>
-<div class="flex-grow">
-<div class="text-xs text-primary font-bold uppercase tracking-wider mb-1">Impact Badge</div>
-<div class="text-lg font-bold text-white leading-tight">Carbon Guardian</div>
-<div class="w-full h-1.5 bg-gray-700 rounded-full mt-2 overflow-hidden">
-<div class="h-full bg-primary w-[78%] rounded-full"></div>
+<div class="flex flex-col gap-2 mb-8">
+<label class="text-sm font-bold text-slate-900 dark:text-slate-200" for="message">Message</label>
+<textarea class="w-full bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 rounded-lg px-4 py-3 focus:ring-2 focus:ring-primary focus:border-primary outline-none text-slate-900 dark:text-white resize-none" id="message" name="message" placeholder="How can we help you?" required="" rows="4"></textarea>
 </div>
-<div class="text-[10px] text-gray-400 mt-1 text-right">780 / 1000 XP</div>
-</div>
-</div>
-</div>
-<div class="bg-surface-dark rounded-2xl border border-white/5 overflow-hidden">
-<div class="p-6 border-b border-white/5 flex items-center justify-between">
-<h3 class="text-lg font-bold text-white flex items-center gap-2">
-<span class="material-icons-round text-gray-400">history</span>
-                        Latest Transactions
-                    </h3>
-<button class="text-xs text-primary hover:text-white transition-colors uppercase tracking-wider font-bold border border-primary/20 hover:bg-primary/10 px-3 py-1 rounded-lg">All</button>
-</div>
-<div class="overflow-x-auto">
-<table class="w-full text-left border-collapse">
-<thead class="hidden">
-<tr class="text-[10px] font-bold text-gray-500 uppercase tracking-widest bg-black/20">
-<th class="py-3 pl-6 font-medium">Type</th>
-<th class="py-3 font-medium">Amount</th>
-</tr>
-</thead>
-<tbody class="text-sm divide-y divide-white/5">
-<tr class="group hover:bg-white/[0.02] transition-colors">
-<td class="py-3 pl-4 pr-2">
-<div class="flex items-center gap-3">
-<div class="w-8 h-8 rounded-lg bg-green-500/10 border border-green-500/20 flex items-center justify-center text-green-400 shrink-0">
-<span class="material-icons-round text-sm">add</span>
-</div>
-<div class="flex flex-col">
-<span class="font-medium text-white text-xs">Deposit</span>
-<span class="text-[10px] text-gray-500">Oct 24</span>
-</div>
-</div>
-</td>
-<td class="py-3 pr-4 text-right">
-<div class="font-mono text-white text-sm">1,550.00</div>
-<div class="text-[10px] text-primary">+5KG CO2</div>
-</td>
-</tr>
-<tr class="group hover:bg-white/[0.02] transition-colors">
-<td class="py-3 pl-4 pr-2">
-<div class="flex items-center gap-3">
-<div class="w-8 h-8 rounded-lg bg-blue-500/10 border border-blue-500/20 flex items-center justify-center text-blue-400 shrink-0">
-<span class="material-icons-round text-sm">shopping_bag</span>
-</div>
-<div class="flex flex-col">
-<span class="font-medium text-white text-xs">Purchase</span>
-<span class="text-[10px] text-gray-500">Oct 22</span>
-</div>
-</div>
-</td>
-<td class="py-3 pr-4 text-right">
-<div class="font-mono text-white text-sm">4,650.00</div>
-<div class="text-[10px] text-primary">+15KG CO2</div>
-</td>
-</tr>
-<tr class="group hover:bg-white/[0.02] transition-colors">
-<td class="py-3 pl-4 pr-2">
-<div class="flex items-center gap-3">
-<div class="w-8 h-8 rounded-lg bg-purple-500/10 border border-purple-500/20 flex items-center justify-center text-purple-400 shrink-0">
-<span class="material-icons-round text-sm">token</span>
-</div>
-<div class="flex flex-col">
-<span class="font-medium text-white text-xs">Mint NFT</span>
-<span class="text-[10px] text-gray-500">Oct 20</span>
-</div>
-</div>
-</td>
-<td class="py-3 pr-4 text-right">
-<div class="font-mono text-white text-sm">3,100.00</div>
-<div class="text-[10px] text-primary">+10KG CO2</div>
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-</div>
-</div>
-<div class="relative rounded-2xl overflow-hidden bg-surface-dark border border-white/10 mt-8">
-<div class="absolute inset-0">
-<img alt="Abstract macro leaf texture" class="w-full h-full object-cover opacity-20" data-alt="Dark abstract macro texture of a green leaf vein structure" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD36XyXg3Fa09kwduN6wUpqXpRNKln3rr0rgPiMadAD09I3RkTfjwwdsZoSQSox0UrmMD4QP42j2XCd-RmNtxxG0gwEsGZLSfQfb9Muz2B9mBG3KC-jr4xWSEE_c8cR_cvoqmv89kjemU71H_6V5P4yXFkhAQYegdbnKMyE_CHVhN5EVwFfhq1vUmfS9pgPuT6PrDPOcjcfrzdyZQMq--KyjAADk4Iuo4XT08Nt5HfSL1fxwKvm1SovVCG_J82UL2iPDo7dH7PedhU"/>
-<div class="absolute inset-0 bg-gradient-to-r from-background-dark via-background-dark/95 to-transparent"></div>
-</div>
-<div class="relative z-10 px-6 py-12 md:px-12 md:py-16 flex flex-col md:flex-row items-center justify-between gap-8">
-<div class="max-w-xl">
-<h2 class="text-3xl font-bold text-white mb-3">Join the Green Revolution</h2>
-<p class="text-gray-400 leading-relaxed">Be the first to access new plots and exclusive NFT drops. Simulating impact is just the beginning of your journey with Sustave.</p>
-</div>
-<form action="mailto:partnerships@sustave.com" class="w-full max-w-md flex flex-col sm:flex-row gap-3" enctype="text/plain" method="post">
-<input class="flex-grow bg-black/30 backdrop-blur border border-white/10 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/50 transition-all" placeholder="Enter your email" required="" type="email"/>
-<button class="bg-white text-background-dark hover:bg-gray-100 font-bold px-6 py-3 rounded-xl shadow-lg transition-all whitespace-nowrap flex items-center justify-center gap-2" type="submit">
-                    Join Waitlist <span class="material-icons-round text-sm">arrow_forward</span>
+<button class="bg-accent-orange hover:bg-accent-terracotta text-white px-8 py-4 rounded-xl font-bold whitespace-nowrap transition-all shadow-lg hover:shadow-accent-orange/50" type="submit">
+<span>Send Message</span>
+<span class="material-symbols-outlined text-sm">send</span>
 </button>
 </form>
 </div>
+</section>
+<section class="py-20 px-6 relative" id="faq">
+<div class="max-w-4xl mx-auto">
+<div class="text-center mb-12">
+<h2 class="text-3xl md:text-4xl font-black text-slate-900 dark:text-white tracking-tight">Frequently Asked Questions</h2>
+<p class="mt-4 text-slate-600 dark:text-slate-300">Everything you need to know about the Screen2Green ecosystem.</p>
 </div>
-<footer class="pt-8 pb-12 border-t border-white/5">
-<div class="flex flex-col md:flex-row items-center justify-between gap-6">
-<div class="text-sm text-gray-500 flex items-center gap-2">
-<span>© 2023 Sustave.</span>
-<span class="w-1 h-1 bg-gray-600 rounded-full"></span>
-<span>Digitizing Nature.</span>
+<div class="space-y-4">
+<details class="glass-panel rounded-2xl overflow-hidden group">
+<summary class="flex items-center justify-between p-6 cursor-pointer list-none">
+<h3 class="text-lg font-bold text-slate-900 dark:text-white">What is the SUS Token?</h3>
+<span class="material-symbols-outlined transition-transform group-open:rotate-180 text-accent-blue">expand_more</span>
+</summary>
+<div class="p-6 pt-0 border-t border-white/10">
+<p class="text-slate-600 dark:text-slate-400">SUS is a utility token that tokenizes agricultural land and carbon credits, allowing you to participate in sustainable farming in Africa.</p>
 </div>
-<div class="flex items-center gap-3">
-<span class="text-[10px] text-gray-600 uppercase tracking-widest font-bold mr-2">Powered By</span>
-<div class="flex gap-3 opacity-60 grayscale hover:grayscale-0 transition-all duration-300">
-<div class="h-8 px-3 border border-white/10 rounded-lg flex items-center gap-2 bg-white/5 hover:bg-white/10 cursor-default">
-<span class="material-icons-round text-sm text-gray-400">terrain</span>
-<span class="text-xs font-bold text-gray-300">Restor</span>
+</details>
+<details class="glass-panel rounded-2xl overflow-hidden group">
+<summary class="flex items-center justify-between p-6 cursor-pointer list-none">
+<h3 class="text-lg font-bold text-slate-900 dark:text-white">How does the Impact Simulation work?</h3>
+<span class="material-symbols-outlined transition-transform group-open:rotate-180 text-accent-blue">expand_more</span>
+</summary>
+<div class="p-6 pt-0 border-t border-white/10">
+<p class="text-slate-600 dark:text-slate-400">It uses real-world data from our moringa farms to estimate your potential environmental impact and financial returns based on the number of SUS tokens you hold.</p>
 </div>
-<div class="h-8 px-3 border border-white/10 rounded-lg flex items-center gap-2 bg-white/5 hover:bg-white/10 cursor-default">
-<span class="material-icons-round text-sm text-gray-400">analytics</span>
-<span class="text-xs font-bold text-gray-300">AEPII</span>
+</details>
+<details class="glass-panel rounded-2xl overflow-hidden group">
+<summary class="flex items-center justify-between p-6 cursor-pointer list-none">
+<h3 class="text-lg font-bold text-slate-900 dark:text-white">How can I join the waitlist?</h3>
+<span class="material-symbols-outlined transition-transform group-open:rotate-180 text-accent-blue">expand_more</span>
+</summary>
+<div class="p-6 pt-0 border-t border-white/10">
+<p class="text-slate-600 dark:text-slate-400">Simply enter your name and email in the 'Join the Waitlist' section. You'll be among the first to get access when we launch.</p>
 </div>
-<div class="h-8 px-3 border border-white/10 rounded-lg flex items-center gap-2 bg-white/5 hover:bg-white/10 cursor-default">
-<span class="material-icons-round text-sm text-gray-400">search</span>
-<span class="text-xs font-bold text-gray-300">Google</span>
+</details>
+<details class="glass-panel rounded-2xl overflow-hidden group">
+<summary class="flex items-center justify-between p-6 cursor-pointer list-none">
+<h3 class="text-lg font-bold text-slate-900 dark:text-white">Who are Sustave's partners?</h3>
+<span class="material-symbols-outlined transition-transform group-open:rotate-180 text-accent-blue">expand_more</span>
+</summary>
+<div class="p-6 pt-0 border-t border-white/10">
+<p class="text-slate-600 dark:text-slate-400">We are proud to be supported by organizations like Restor.co, Rada360, and Google.</p>
 </div>
+</details>
+<details class="glass-panel rounded-2xl overflow-hidden group">
+<summary class="flex items-center justify-between p-6 cursor-pointer list-none">
+<h3 class="text-lg font-bold text-slate-900 dark:text-white">What is Moringa and why is it used?</h3>
+<span class="material-symbols-outlined transition-transform group-open:rotate-180 text-accent-blue">expand_more</span>
+</summary>
+<div class="p-6 pt-0 border-t border-white/10">
+<p class="text-slate-600 dark:text-slate-400">Moringa is a highly resilient, fast-growing tree that is exceptional at sequestering carbon and providing nutritional and economic benefits to local communities.</p>
+</div>
+</details>
+</div>
+</div>
+</section><footer class="bg-[#f8fafc] dark:bg-deep-forest pt-16 pb-8 px-6 border-t border-slate-200 dark:border-emerald-900/50">
+<div class="max-w-7xl mx-auto">
+<div class="flex flex-col md:flex-row justify-between items-center gap-10 mb-12">
+<div class="flex items-center gap-2">
+<img alt="Screen2Green Logo" class="h-10 w-auto" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBemCAadPkrUdDO1VTbW28jwbsaltmwGa82zzTpqpigTkcVL5XL6549IARfvDHrY1R_Bz0DSwkgeQuG9zO-uCdh635uPHB3-TF9g15-X0xbJVMSlQQRdCoZ1p8m92Bexv_O8tdam8HKNi-TKtHW4qFHVB_YbQ02jiwcQv7bdUFfghNdZ1eNb6Veb_GYcIS4y2I5wg37H5pGdklqir_brKlgJltGl_5Cshv5bG_p0PZZFCsz-3vvmTRR2sPxCnJJizhg7X1NMkEp0-I"/>
+</div>
+<div class="flex flex-wrap justify-center gap-8 md:gap-12 opacity-50 grayscale hover:grayscale-0 transition-all duration-500">
+<div class="flex items-center gap-2 font-bold text-xl text-slate-700 dark:text-slate-300">
+<span class="material-symbols-outlined">forest</span> Restor.co
+                         </div>
+<div class="flex items-center gap-2 font-bold text-xl text-slate-700 dark:text-slate-300">
+<span class="material-symbols-outlined">radar</span> Rada360
+                         </div>
+<div class="flex items-center gap-2 font-bold text-xl text-slate-700 dark:text-slate-300">
+<img alt="Screen2Green Logo" class="h-6 w-auto grayscale" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCqpx8hkcRZ83rMGULLbJvPkueiCTYSulh0mWC-4-f1zVECwL313oXpcYEjxFtJTbk7bRbuAzE3emF1gJO4iRx68zJHXCuWr9Nnc4qVuuoRVNEV-_NK9zdC923hQQw5dC_Tho-I89CizX6pfV7NFYN9_6pOSs9PB_tmL7Eb06NbIzLZccYTYMkp1LCo4axMORkafKPROalam4y75GCtecCdRigOHmfzhjgOPPCTAOgEcEV8tZPv5A4CTcCNwu8uZjdOzSJVOg0Vk4M"/>
+</div>
+<div class="flex items-center gap-2 font-bold text-xl text-slate-700 dark:text-slate-300">
+<svg class="w-6 h-6 fill-current" viewbox="0 0 24 24"><path d="M12.48 10.92v3.28h7.84c-.24 1.84-.853 3.187-1.787 4.133-1.147 1.147-2.933 2.4-6.053 2.4-4.827 0-8.6-3.893-8.6-8.72s3.773-8.72 8.6-8.72c2.6 0 4.507 1.027 5.907 2.347l2.307-2.307C18.747 1.44 16.133 0 12.48 0 5.867 0 .307 5.387.307 12s5.56 12 12.173 12c3.573 0 6.267-1.173 8.373-3.36 2.16-2.16 2.84-5.213 2.84-7.667 0-.76-.053-1.467-.173-2.053H12.48z"></path></svg> Google
+                         </div>
+</div>
+</div>
+<div class="border-t border-slate-200 dark:border-slate-800 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-slate-500 dark:text-slate-400">
+<p>© 2024 Sustave. All rights reserved.</p>
+<div class="flex gap-6">
+<a class="hover:text-primary transition-colors" href="#">Privacy Policy</a>
+<a class="hover:text-primary transition-colors" href="#">Terms of Service</a>
+<a class="hover:text-primary transition-colors" href="#">Cookies</a>
 </div>
 </div>
 </div>
 </footer>
-</main>
+</div>
 </body></html>
