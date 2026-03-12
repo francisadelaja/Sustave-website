@@ -1,7 +1,8 @@
-<!DOCTYPE html>
+<html lang="en"><head></head><body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 font-display overflow-x-hidden relative transition-colors duration-300">```html
 
-<html lang="en"><head>
-<meta charset="utf-8"/>
+
+
+    <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <title>Screen2Green Hub &amp; Impact Dashboard</title>
 <link href="https://fonts.googleapis.com" rel="preconnect"/>
@@ -9,7 +10,8 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&amp;display=swap" rel="stylesheet"/>
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-<script id="tailwind-config">tailwind.config = {
+<script id="tailwind-config">
+        tailwind.config = {
             darkMode: "class",
             theme: {
                 extend: {
@@ -39,8 +41,10 @@
                     }
                 },
             },
-        }</script>
-<style>@keyframes float {
+        }
+    </script>
+<style>
+        @keyframes float {
             0% { transform: translateY(0px); }
             50% { transform: translateY(-20px); }
             100% { transform: translateY(0px); }
@@ -67,6 +71,7 @@
         .leaf:nth-child(2) { left: 30%; bottom: 20%; animation: drift 15s linear infinite; animation-delay: 2s; }
         .leaf:nth-child(3) { left: 70%; bottom: 15%; animation: drift 10s linear infinite; animation-delay: 4s; }
         .leaf:nth-child(4) { left: 90%; bottom: 25%; animation: drift 18s linear infinite; animation-delay: 1s; }
+        
         .glass-panel {
             background: rgba(255, 255, 255, 0.8);
             backdrop-filter: blur(16px);
@@ -76,18 +81,7 @@
             background: rgba(6, 78, 59, 0.6);
             border: 1px solid rgba(74, 222, 128, 0.1);
         }
-        .lush-gradient {
-            background: linear-gradient(135deg, #064e3b 0%, #022c22 100%);
-        }
-        @keyframes float-text {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-8px); }
-        }
-        .animate-float-text {
-            display: block;
-            animation: float-text 4s ease-in-out infinite;
-        }
-    
+        
         @keyframes smooth-float {
             0%, 100% { transform: translateY(0) rotate(0deg); }
             33% { transform: translateY(-10px) rotate(0.5deg); }
@@ -97,6 +91,11 @@
             display: block;
             animation: smooth-float 5s ease-in-out infinite;
         }
+        .animate-float-text:nth-child(2) { animation-delay: 0.5s; }
+        .animate-float-text:nth-child(3) { animation-delay: 1s; }
+        .animate-float-text:nth-child(4) { animation-delay: 1.5s; }
+        .animate-float-text:nth-child(5) { animation-delay: 2s; }
+
         .graffiti-glassy {
             background: 
                 radial-gradient(circle at 10% 20%, rgba(16, 185, 129, 0.05) 0%, transparent 40%),
@@ -105,106 +104,131 @@
             backdrop-filter: blur(8px);
             position: relative;
         }
-        .graffiti-glassy::before {
-            content: '';
+
+        @keyframes revolve {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        @keyframes counter-revolve {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(-360deg); }
+        }
+        .cyclone-container {
+            position: relative;
+            height: 700px;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .satellite {
             position: absolute;
-            inset: 0;
-            background: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
-            opacity: 0.02;
-            pointer-events: none;
+            width: 280px;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            animation: revolve 40s linear infinite;
+            transform-origin: center -250px;
+            top: 50%;
+            left: 50%;
+            margin-left: -140px;
+            margin-top: 250px;
+        }
+        .satellite-inner {
+            animation: counter-revolve 40s linear infinite;
+        }
+        .satellite:hover {
+            animation-play-state: paused;
+            z-index: 50;
+            scale: 1.15;
+        }
+        .satellite:hover .satellite-inner {
+            animation-play-state: paused;
+        }
+        .satellite:nth-child(1) { animation-delay: 0s; }
+        .satellite:nth-child(2) { animation-delay: -8s; }
+        .satellite:nth-child(3) { animation-delay: -16s; }
+        .satellite:nth-child(4) { animation-delay: -24s; }
+        .satellite:nth-child(5) { animation-delay: -32s; }
+
+        @media (max-width: 1024px) {
+            .cyclone-container { height: auto; flex-direction: column; gap: 2rem; padding: 4rem 0; }
+            .satellite { position: relative; animation: none; transform: none; transform-origin: center; top: auto; left: auto; margin: 0; width: 100%; max-width: 400px; }
+            .satellite-inner { animation: none; }
+        }
+
+        #share-modal:target {
+            display: flex !important;
+        }
+
+        .opportunity-gradient {
+            background: linear-gradient(135deg, #064e3b 0%, #022c22 100%);
+        }
+
+        @keyframes pulse-soft {
+            0%, 100% { opacity: 0.8; }
+            50% { opacity: 0.4; }
+        }
+        .connector-line {
+            background: linear-gradient(to bottom, transparent, #10b981, transparent);
+            width: 2px;
+            animation: pulse-soft 3s ease-in-out infinite;
+        }
+
+        .staggered-path {
+            stroke-dasharray: 1000;
+            stroke-dashoffset: 1000;
+            animation: dash 10s linear forwards infinite;
+        }
+        @keyframes dash {
+            to { stroke-dashoffset: 0; }
         }
     </style>
-<style>
-@keyframes revolve {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(360deg); }
-}
-@keyframes counter-revolve {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(-360deg); }
-}
-.cyclone-container {
-    position: relative;
-    height: 700px;
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-.satellite {
-    position: absolute;
-    width: 280px;
-    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    animation: revolve 40s linear infinite;
-    transform-origin: center -250px;
-    top: 50%;
-    left: 50%;
-    margin-left: -140px;
-    margin-top: 250px;
-}
-.satellite-inner {
-    animation: counter-revolve 40s linear infinite;
-}
-.satellite:hover {
-    animation-play-state: paused;
-    z-index: 50;
-    scale: 1.15;
-}
-.satellite:hover .satellite-inner {
-    animation-play-state: paused;
-}
-.satellite:nth-child(1) { animation-delay: 0s; }
-.satellite:nth-child(2) { animation-delay: -8s; }
-.satellite:nth-child(3) { animation-delay: -16s; }
-.satellite:nth-child(4) { animation-delay: -24s; }
-.satellite:nth-child(5) { animation-delay: -32s; }
-@media (max-width: 1024px) {
-    .cyclone-container { height: auto; flex-direction: column; gap: 2rem; }
-    .satellite { position: relative; animation: none; transform: none; transform-origin: center; top: auto; left: auto; margin: 0; width: 100%; max-width: 400px; }
-    .satellite-inner { animation: none; }
-}
-</style></head>
-<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 font-display overflow-x-hidden relative transition-colors duration-300">
 <div class="fixed inset-0 pointer-events-none overflow-hidden z-0">
 <div class="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-[#f8fafc] to-[#ecfdf5] dark:from-[#064e3b] dark:to-[#022c22] -z-10"></div>
-<div class="leaf"></div>
-<div class="leaf"></div>
-<div class="leaf"></div>
-<div class="leaf"></div>
+<div class="leaf"></div><div class="leaf"></div><div class="leaf"></div><div class="leaf"></div>
 <div class="absolute -top-[20%] right-[10%] w-[600px] h-[600px] bg-primary/10 rounded-full blur-[120px]"></div>
 <div class="absolute bottom-[10%] left-[5%] w-[400px] h-[400px] bg-primary/10 rounded-full blur-[100px]"></div>
 </div>
 <div class="relative z-10 flex flex-col min-h-screen">
+<!-- Header -->
 <header class="sticky top-0 z-50 glass-panel border-b border-white/20 dark:border-white/10">
 <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
 <a class="flex items-center gap-3 hover:opacity-80 transition-opacity" href="#" style="">
-<img alt="Screen2Green Logo" class="h-10 w-auto" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBVJ8EumNWzcgbW3OM1iEsJ-HF636P8DCAhGBhKJqzV0IwqImZ1WrMz-1jA_pnJx6u5lVf6Fx4JdewtSrlquA2WpAXBMJcN1SOX56LAbOm3r6c3y5Up1iFHkWXhCvm42trTQ-9Rm99bcrCdKqOXs6oqYnGAY0Olfth0NQTWbe1kPu5xFDkIUt55VxpAHP1u1zXWm0eze5UmVWh5b1vmo9nn-ftF7h2mZkD7IOG-RxsDmypkJY4cEACGSyjngyLJHjEnO6qAVne7zvY" style=""/>
+<img alt="Sustave Logo" class="h-10 w-auto" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBVJ8EumNWzcgbW3OM1iEsJ-HF636P8DCAhGBhKJqzV0IwqImZ1WrMz-1jA_pnJx6u5lVf6Fx4JdewtSrlquA2WpAXBMJcN1SOX56LAbOm3r6c3y5Up1iFHkWXhCvm42trTQ-9Rm99bcrCdKqOXs6oqYnGAY0Olfth0NQTWbe1kPu5xFDkIUt55VxpAHP1u1zXWm0eze5UmVWh5b1vmo9nn-ftF7h2mZkD7IOG-RxsDmypkJY4cEACGSyjngyLJHjEnO6qAVne7zvY" style=""/>
 </a>
+<div class="hidden md:flex items-center gap-8 text-sm font-bold tracking-tight"><a class="hover:text-primary transition-colors" href="https://www.sustave.com" style="">Home</a></div>
 </div>
 </header>
+<!-- Hero Section -->
 <section class="relative px-6 py-24 md:py-32 graffiti-glassy">
 <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
 <div class="flex flex-col gap-6 order-2 lg:order-1">
 <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 w-fit">
 <span class="relative flex h-2 w-2">
-<span class="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75"></span>
-<span class="relative inline-flex rounded-full h-2 w-2"></span>
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 bg-primary"></span>
+<span class="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
 </span>
-<span class="text-xs font-bold text-green-800 dark:text-green-300 uppercase tracking-wider" style="">Screen2Green</span>
+<span class="text-xs font-bold text-green-800 dark:text-green-300 uppercase tracking-wider" style="">loading</span>
 </div>
-<h1 class="text-4xl md:text-5xl lg:text-6xl font-black leading-[1.1] tracking-tight text-slate-900 dark:text-white" style=""><span class="animate-float-text text-emerald-500 text-3xl md:text-5xl lg:text-5xl" style="">Scale decarbonization</span><span class="animate-float-text text-sky-400 text-3xl md:text-5xl lg:text-5xl" style="">Empower people</span><span class="animate-float-text text-orange-600 text-3xl md:text-5xl lg:text-5xl" style="">Restore soil</span><span class="animate-float-text text-teal-500 text-3xl md:text-5xl lg:text-5xl" style="">Offset carbon footprints</span><span class="animate-float-text text-primary text-3xl md:text-5xl lg:text-5xl" style="">Earn SUS yields.</span></h1>
+<h1 class="text-5xl md:text-6xl lg:text-7xl font-black leading-[1.05] tracking-tighter text-slate-900 dark:text-white" style="">
+<span class="animate-float-text text-emerald-500 italic" style="">Scale decarbonization</span>
+<span class="animate-float-text text-sky-400 font-extrabold" style="">Empower people</span>
+<span class="animate-float-text text-accent-orange underline decoration-orange-500/30" style="">Restore soil</span>
+<span class="animate-float-text text-teal-500 tracking-normal" style="">Offset carbon footprints</span>
+<span class="animate-float-text text-primary font-black uppercase" style="">Earn SUS yields.</span>
+</h1>
 <p class="text-lg text-slate-600 dark:text-slate-300 max-w-lg leading-relaxed" style="">
-                        Experience the future of digital carbon farming. Track your impact and yield SUS tokens directly from your device, turning screen time into green time.
+                        Experience the future of digital carbon farming. Track your impact and yield SUS directly from your device, turning screen time into green time.
                     </p>
 <div class="flex items-center gap-4 pt-6 text-sm text-slate-500 dark:text-slate-400">
 <div class="flex -space-x-2">
-<div class="w-8 h-8 rounded-full border-2 border-white dark:border-background-dark bg-gray-200 bg-cover bg-center" data-alt="User avatar 1" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDup7jr6ilO0w3ik0taCkJEAFUvqzxJNiAXFmYfuwQMRV8PjNIIBhFokL8qYedlFmvLGh9dviLt_JLeVC6V-hLTcCEpvARf-uFwC9JcX8I6UriaU1Qna1BbeWnFWoqzvEuoB75mMQQYfUcwYkNNOCDNs3WWRj-3NSErld25wM7Cnm6aAVEAQjPH6z71zJdNhy-o_elPeJ9UMA_wgTQthsMIp8snY4V9Ln7cg9Ju78-wcEDAWCx454A6LuWQozxUD3HsuT53po3qUEY");'></div>
-<div class="w-8 h-8 rounded-full border-2 border-white dark:border-background-dark bg-gray-200 bg-cover bg-center" data-alt="User avatar 2" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuClKIawVkYDLjqVH7NglER8haAa5V4L3jCJfSDM2FSlU-ObUkhGdTdPlOnHtAaHJNRYJhXfMVkSQHuPI7A40dCkDzvcVUIXHn9teCusu_AAjdUxU-5--sVntOshIZSAkaBlz5Le3rx5HGxo2cvr0K9qKqJ_miWdsE0xux-mOPGsoMzO7v98raqaugFBG1og4QaHY69uUNt4Re4-aWoVbdQED1cUafLmkuMTlVJStANx68TZBr8VcoOr3mMdXzKkRijLbvK83dI6CBs");'></div>
-<div class="w-8 h-8 rounded-full border-2 border-white dark:border-background-dark bg-gray-200 bg-cover bg-center" data-alt="User avatar 3" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuD_8_ILV41vyUIuGpf_S0_n7A0zg-BGaHxcry-sbqthSl28cv1zksgMdFeQqrE4W7FKLIGf00YuqUPuKlMOYy51LWZtxyxF-l7acOqiidJ2iWwM2fXmEgmmg4u1kRx474uhXbRczBuZEpGJCTPYJW_KQdz11Wx8iYKJdU4vaVv1ds-mdN5vBcoVnFRpnXbcJJ8lTnibSSCEx-N4kH2Pr9NUnoIfqznpj-FcjXrK6K9I4uCooCR0d29K5YHgiUW4uTaVtMyAz2__qzA");'></div>
+<div class="w-8 h-8 rounded-full border-2 border-white dark:border-background-dark bg-gray-200 bg-cover bg-center" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDup7jr6ilO0w3ik0taCkJEAFUvqzxJNiAXFmYfuwQMRV8PjNIIBhFokL8qYedlFmvLGh9dviLt_JLeVC6V-hLTcCEpvARf-uFwC9JcX8I6UriaU1Qna1BbeWnFWoqzvEuoB75mMQQYfUcwYkNNOCDNs3WWRj-3NSErld25wM7Cnm6aAVEAQjPH6z71zJdNhy-o_elPeJ9UMA_wgTQthsMIp8snY4V9Ln7cg9Ju78-wcEDAWCx454A6LuWQozxUD3HsuT53po3qUEY");'></div>
+<div class="w-8 h-8 rounded-full border-2 border-white dark:border-background-dark bg-gray-200 bg-cover bg-center" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuClKIawVkYDLjqVH7NglER8haAa5V4L3jCJfSDM2FSlU-ObUkhGdTdPlOnHtAaHJNRYJhXfMVkSQHuPI7A40dCkDzvcVUIXHn9teCusu_AAjdUxU-5--sVntOshIZSAkaBlz5Le3rx5HGxo2cvr0K9qKqJ_miWdsE0xux-mOPGsoMzO7v98raqaugFBG1og4QaHY69uUNt4Re4-aWoVbdQED1cUafLmkuMTlVJStANx68TZBr8VcoOr3mMdXzKkRijLbvK83dI6CBs");'></div>
+<div class="w-8 h-8 rounded-full border-2 border-white dark:border-background-dark bg-gray-200 bg-cover bg-center" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuD_8_ILV41vyUIuGpf_S0_n7A0zg-BGaHxcry-sbqthSl28cv1zksgMdFeQqrE4W7FKLIGf00YuqUPuKlMOYy51LWZtxyxF-l7acOqiidJ2iWwM2fXmEgmmg4u1kRx474uhXbRczBuZEpGJCTPYJW_KQdz11Wx8iYKJdU4vaVv1ds-mdN5vBcoVnFRpnXbcJJ8lTnibSSCEx-N4kH2Pr9NUnoIfqznpj-FcjXrK6K9I4uCooCR0d29K5YHgiUW4uTaVtMyAz2__qzA");'></div>
 </div>
-<p class="" style="">Join a growing network of sustainable wealth creators.</p>
+<p class="" style="">Join us to grow a sustainable and greener future</p>
 </div>
 </div>
+<!-- Interactive Mobile Mockup -->
 <div class="relative order-1 lg:order-2 flex justify-center lg:justify-end animate-float">
 <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] bg-gradient-radial from-primary/20 to-transparent blur-3xl -z-10"></div>
 <div class="relative w-[300px] md:w-[340px] h-[600px] md:h-[680px] bg-slate-900 rounded-[3rem] border-[8px] border-slate-800 shadow-2xl overflow-hidden ring-1 ring-slate-900/5">
@@ -223,21 +247,11 @@
 <div class="px-4 mb-6">
 <div class="bg-slate-800/50 rounded-2xl p-4 border border-slate-700">
 <div class="flex justify-between items-end h-32 gap-2">
-<div class="w-full bg-primary/20 rounded-t-sm h-[40%] relative group">
-<div class="absolute bottom-0 w-full h-full rounded-t-sm opacity-60"></div>
-</div>
-<div class="w-full bg-primary/20 rounded-t-sm h-[60%] relative group">
-<div class="absolute bottom-0 w-full h-full rounded-t-sm opacity-70"></div>
-</div>
-<div class="w-full bg-primary/20 rounded-t-sm h-[30%] relative group">
-<div class="absolute bottom-0 w-full h-full rounded-t-sm opacity-50"></div>
-</div>
-<div class="w-full bg-primary/20 rounded-t-sm h-[80%] relative group">
-<div class="absolute bottom-0 w-full h-full rounded-t-sm"></div>
-</div>
-<div class="w-full bg-primary/20 rounded-t-sm h-[50%] relative group">
-<div class="absolute bottom-0 w-full h-full rounded-t-sm opacity-60"></div>
-</div>
+<div class="w-full bg-primary/20 rounded-t-sm h-[40%] relative"><div class="absolute bottom-0 w-full h-full rounded-t-sm opacity-60"></div></div>
+<div class="w-full bg-primary/20 rounded-t-sm h-[60%] relative"><div class="absolute bottom-0 w-full h-full rounded-t-sm opacity-70"></div></div>
+<div class="w-full bg-primary/20 rounded-t-sm h-[30%] relative"><div class="absolute bottom-0 w-full h-full rounded-t-sm opacity-50"></div></div>
+<div class="w-full bg-primary/20 rounded-t-sm h-[80%] relative"><div class="absolute bottom-0 w-full h-full rounded-t-sm"></div></div>
+<div class="w-full bg-primary/20 rounded-t-sm h-[50%] relative"><div class="absolute bottom-0 w-full h-full rounded-t-sm opacity-60"></div></div>
 </div>
 <div class="flex justify-between mt-2 text-[10px] text-gray-400 font-mono">
 <span class="" style="">Mon</span><span class="" style="">Tue</span><span class="" style="">Wed</span><span class="" style="">Thu</span><span class="" style="">Fri</span>
@@ -248,250 +262,368 @@
 <h4 class="text-sm font-semibold mb-4 text-gray-300 uppercase tracking-wide" style="">My Digital Farms</h4>
 <div class="flex flex-col gap-4">
 <div class="flex items-center gap-4 p-3 bg-slate-700/50 rounded-xl border border-slate-600/50">
-<div class="w-12 h-12 rounded-lg bg-green-900/50 flex items-center justify-center text-primary">
-<span class="material-symbols-outlined" style="">forest</span>
-</div>
-<div class="flex-1">
-<h5 class="font-bold text-sm" style="">Reforestation Zone A</h5>
-<p class="text-xs text-gray-400" style="">+12 Trees Planted</p>
-</div>
+<div class="w-12 h-12 rounded-lg bg-green-900/50 flex items-center justify-center text-primary"><span class="material-symbols-outlined" style="">forest</span></div>
+<div class="flex-1"><h5 class="font-bold text-sm" style="">Reforestation Zone A</h5><p class="text-xs text-gray-400" style="">+12 Trees Planted</p></div>
 <span class="font-mono text-primary text-sm font-bold" style="">+45 SUS</span>
 </div>
 <div class="flex items-center gap-4 p-3 bg-slate-700/50 rounded-xl border border-slate-600/50">
-<div class="w-12 h-12 rounded-lg bg-green-900/50 flex items-center justify-center text-primary">
-<span class="material-symbols-outlined" style="">agriculture</span>
-</div>
-<div class="flex-1">
-<h5 class="font-bold text-sm" style="">Soil Regen Project</h5>
-<p class="text-xs text-gray-400" style="">2.5 Tons CO2</p>
-</div>
+<div class="w-12 h-12 rounded-lg bg-green-900/50 flex items-center justify-center text-primary"><span class="material-symbols-outlined" style="">agriculture</span></div>
+<div class="flex-1"><h5 class="font-bold text-sm" style="">Soil Regen Project</h5><p class="text-xs text-gray-400" style="">2.5 Tons CO2</p></div>
 <span class="font-mono text-primary text-sm font-bold" style="">+82 SUS</span>
 </div>
-<div class="flex items-center gap-4 p-3 bg-slate-700/50 rounded-xl border border-slate-600/50">
-<div class="w-12 h-12 rounded-lg bg-green-900/50 flex items-center justify-center text-primary">
-<span class="material-symbols-outlined" style="">water_drop</span>
-</div>
-<div class="flex-1">
-<h5 class="font-bold text-sm" style="">Water Conservation</h5>
-<p class="text-xs text-gray-400" style="">500L Saved</p>
-</div>
-<span class="font-mono text-primary text-sm font-bold" style="">+15 SUS</span>
-</div>
-</div>
-<div class="absolute bottom-0 left-0 w-full h-20 bg-gradient-to-t from-slate-900 to-transparent"></div>
 </div>
 </div>
 </div>
 </div>
 </div>
-</section><section class="px-6 py-24 md:py-32" id="contact">
-<div class="max-w-3xl mx-auto">
-<div class="text-center mb-10">
-<h2 class="text-3xl font-black text-slate-900 dark:text-white mb-3" style="">Join the Waitlist</h2>
-<p class="text-slate-600 dark:text-slate-400" style="">Have questions about Screen2Green? We're here to help.</p>
 </div>
-<form action="mailto:info@sustave.com" class="glass-panel p-8 rounded-2xl border border-slate-200 dark:border-slate-700" enctype="text/plain" method="post">
-<div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+</section>
+<!-- Impact by 2030 -->
+<section class="px-6 py-24 md:py-32 relative overflow-hidden" id="impact-2030">
+<div class="max-w-7xl mx-auto">
+<div class="text-center mb-20">
+<h2 class="text-4xl md:text-5xl lg:text-6xl font-black text-slate-900 dark:text-white mb-6 tracking-tighter italic" style="">Impact by 2030</h2>
+<p class="text-lg text-slate-600 dark:text-slate-400 max-w-2xl mx-auto" style="">Our roadmap to a regenerative future, powered by community-driven climate action and transparent data.</p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+<!-- Stat Card 1 -->
+<div class="glass-panel p-8 rounded-3xl border-t-4 border-t-emerald-500 shadow-xl hover:translate-y-[-5px] transition-transform">
+<div class="w-14 h-14 rounded-2xl bg-emerald-500/10 flex items-center justify-center text-emerald-500 mb-6">
+<span class="material-symbols-outlined text-3xl" style="">nature_people</span>
+</div>
+<h3 class="text-4xl font-black text-slate-900 dark:text-white mb-2 tracking-tighter" style="">50M+</h3>
+<p class="text-sm font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-widest mb-4" style="">Trees Planted</p>
+<p class="text-slate-600 dark:text-slate-400 leading-relaxed" style="">5–10M tonnes CO₂ removed through verified climate farms across the continent.</p>
+</div>
+<!-- Stat Card 2 -->
+<div class="glass-panel p-8 rounded-3xl border-t-4 border-t-sky-500 shadow-xl hover:translate-y-[-5px] transition-transform">
+<div class="w-14 h-14 rounded-2xl bg-sky-500/10 flex items-center justify-center text-sky-500 mb-6">
+<span class="material-symbols-outlined text-3xl" style="">agriculture</span>
+</div>
+<h3 class="text-4xl font-black text-slate-900 dark:text-white mb-2 tracking-tighter" style="">100k+</h3>
+<p class="text-sm font-bold text-sky-600 dark:text-sky-400 uppercase tracking-widest mb-4" style="">Farmers Funded</p>
+<p class="text-slate-600 dark:text-slate-400 leading-relaxed" style="">Smallholder farmers pre-financed and 50,000–100,000 hectares of soil restored.</p>
+</div>
+<!-- Stat Card 3 -->
+<div class="glass-panel p-8 rounded-3xl border-t-4 border-t-orange-500 shadow-xl hover:translate-y-[-5px] transition-transform">
+<div class="w-14 h-14 rounded-2xl bg-orange-500/10 flex items-center justify-center text-orange-500 mb-6">
+<span class="material-symbols-outlined text-3xl" style="">work</span>
+</div>
+<h3 class="text-4xl font-black text-slate-900 dark:text-white mb-2 tracking-tighter" style="">50k</h3>
+<p class="text-sm font-bold text-orange-600 dark:text-orange-400 uppercase tracking-widest mb-4" style="">Green Jobs</p>
+<p class="text-slate-600 dark:text-slate-400 leading-relaxed" style="">30,000–50,000 sustainable employment opportunities created specifically for African youth.</p>
+</div>
+<!-- Stat Card 4 -->
+<div class="glass-panel p-8 rounded-3xl border-t-4 border-t-primary shadow-xl hover:translate-y-[-5px] transition-transform">
+<div class="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center text-primary mb-6">
+<span class="material-symbols-outlined text-3xl" style="">diversity_3</span>
+</div>
+<h3 class="text-4xl font-black text-slate-900 dark:text-white mb-2 tracking-tighter" style="">Women</h3>
+<p class="text-sm font-bold text-primary uppercase tracking-widest mb-4" style="">Rural Enterprises</p>
+<p class="text-slate-600 dark:text-slate-400 leading-relaxed" style="">Scaling women-led businesses across the climate agriculture value chains.</p>
+</div>
+<!-- Stat Card 5 -->
+<div class="lg:col-span-2 glass-panel p-8 rounded-3xl border-t-4 border-t-teal-500 shadow-xl hover:translate-y-[-5px] transition-transform relative overflow-hidden">
+<div class="absolute top-0 right-0 p-10 opacity-10 scale-150 rotate-12">
+<span class="material-symbols-outlined text-[120px]" style="">payments</span>
+</div>
+<div class="flex flex-col h-full justify-between">
+<div>
+<div class="w-14 h-14 rounded-2xl bg-teal-500/10 flex items-center justify-center text-teal-500 mb-6">
+<span class="material-symbols-outlined text-3xl" style="">trending_up</span>
+</div>
+<h3 class="text-4xl md:text-5xl font-black text-slate-900 dark:text-white mb-2 tracking-tighter" style="">$120M</h3>
+<p class="text-sm font-bold text-teal-600 dark:text-teal-400 uppercase tracking-widest mb-4" style="">Economic Activity</p>
+</div>
+<p class="text-slate-600 dark:text-slate-400 leading-relaxed max-w-lg" style="">Generating between $50M–$120M in climate-driven economic value, directly empowering local communities.</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Join the Waitlist Section -->
+<section class="px-6 py-24 md:py-32 bg-white/50 dark:bg-black/20" id="contact">
+<div class="max-w-3xl mx-auto text-center">
+<h2 class="text-4xl font-black text-slate-900 dark:text-white mb-4 tracking-tight" style="">Join the Waitlist</h2>
+<p class="text-slate-600 dark:text-slate-400 mb-12" style="">Be among the first to experience Screen2Green and turn screen time into green time.</p>
+<form action="mailto:screen2green@sustave.com" class="glass-panel p-8 md:p-10 rounded-3xl border border-slate-200 dark:border-white/10 mb-12 shadow-xl" enctype="text/plain" method="post">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8 text-left">
 <div class="flex flex-col gap-2">
-<label class="text-sm font-bold text-slate-900 dark:text-slate-200" for="name" style="">Name</label>
-<input class="w-full bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 rounded-lg px-4 py-3 focus:ring-2 focus:ring-primary focus:border-primary outline-none text-slate-900 dark:text-white" id="name" name="name" placeholder="Jane Doe" required="" type="text"/>
+<label class="text-xs font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400" for="name" style="">Name</label>
+<input class="w-full bg-white/50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-xl px-5 py-4 focus:ring-2 focus:ring-primary focus:border-primary outline-none text-slate-900 dark:text-white transition-all" id="name" name="name" placeholder="Jane Doe" required="" type="text"/>
 </div>
 <div class="flex flex-col gap-2">
-<label class="text-sm font-bold text-slate-900 dark:text-slate-200" for="email" style="">Email</label>
-<input class="w-full bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 rounded-lg px-4 py-3 focus:ring-2 focus:ring-primary focus:border-primary outline-none text-slate-900 dark:text-white" id="email" name="email" placeholder="jane@example.com" required="" type="email"/>
+<label class="text-xs font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400" for="email" style="">Email</label>
+<input class="w-full bg-white/50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-xl px-5 py-4 focus:ring-2 focus:ring-primary focus:border-primary outline-none text-slate-900 dark:text-white transition-all" id="email" name="email" placeholder="jane@example.com" required="" type="email"/>
 </div>
 </div>
-<div class="flex flex-col gap-2 mb-8">
-<label class="text-sm font-bold text-slate-900 dark:text-slate-200" for="message" style="">Message</label>
-<textarea class="w-full bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 rounded-lg px-4 py-3 focus:ring-2 focus:ring-primary focus:border-primary outline-none text-slate-900 dark:text-white resize-none" id="message" name="message" placeholder="How can we help you?" required="" rows="4"></textarea>
-</div>
-<button class="bg-accent-orange hover:bg-accent-terracotta text-white px-8 py-4 rounded-xl font-bold whitespace-nowrap transition-all shadow-lg hover:shadow-accent-orange/50" style="" type="submit">
-<span class="" style="">Secure Access</span>
-<span class="material-symbols-outlined text-sm" style="">send</span>
+<div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+<button class="w-full sm:w-auto bg-accent-orange hover:bg-accent-terracotta text-white px-10 py-4 rounded-2xl font-black transition-all shadow-lg hover:shadow-accent-orange/50 flex items-center justify-center gap-3 group" style="" type="submit">
+<span class="" style="">JOIN THE WAITLIST</span>
+<span class="material-symbols-outlined text-xl group-hover:translate-x-1 transition-transform" style="">arrow_forward</span>
 </button>
-</form>
+<a class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-10 py-4 rounded-2xl border-2 border-primary text-primary font-black hover:bg-primary hover:text-white transition-all duration-300" href="#share-modal" style="">
+<span class="material-symbols-outlined text-xl" style="">share</span>
+<span class="" style="">SHARE</span>
+</a>
 </div>
-</section><section class="px-6 py-24 md:py-32 relative overflow-hidden" id="future-of-sus">
+</form>
+<p class="text-sm text-slate-500 dark:text-slate-400" style="">By joining, you agree to receive updates about our launch and impact.</p>
+</div>
+</section>
+<!-- Future of SUS Section -->
+<section class="px-6 py-24 md:py-32 relative overflow-hidden" id="future-of-sus">
 <div class="absolute top-0 left-0 w-full h-full bg-gradient-to-tr from-emerald-500/5 via-transparent to-sky-500/5 -z-10"></div>
-<div class="max-w-7xl mx-auto"><div class="text-center mb-16">
-<h2 class="text-3xl md:text-5xl font-black text-slate-900 dark:text-white mb-6 tracking-tight" style="">The Future of SUS</h2>
-<p class="text-lg text-slate-600 dark:text-slate-300 max-w-2xl mx-auto" style="">As the cornerstone of the Screen2Green ecosystem, SUS powers a new era of transparent, digital-first ecological restoration.</p>
+<div class="max-w-7xl mx-auto">
+<div class="text-center mb-16">
+<h2 class="text-4xl md:text-5xl font-black text-slate-900 dark:text-white mb-6 tracking-tighter" style="">The Future of SUS</h2>
+<p class="text-lg text-slate-600 dark:text-slate-300 max-w-2xl mx-auto" style="">SUS powers a new era of transparent, digital-first ecological restoration as the heartbeat of the Screen2Green ecosystem.</p>
 </div>
 <div class="cyclone-container">
-<!-- Central Element -->
-<div class="relative z-20 w-32 h-32 md:w-48 md:h-48 rounded-full bg-primary flex items-center justify-center shadow-[0_0_60px_rgba(16,185,129,0.4)] border-4 border-white/20">
-<span class="text-4xl md:text-6xl font-black text-white tracking-tighter" style="">SUS</span>
+<!-- Center SUS Logo -->
+<div class="relative z-20 w-32 h-32 md:w-52 md:h-52 rounded-full bg-primary flex items-center justify-center shadow-[0_0_80px_rgba(16,185,129,0.5)] border-8 border-white/20">
+<span class="text-4xl md:text-7xl font-black text-white tracking-tighter italic" style="">SUS</span>
 </div>
-<!-- Satellite 1 -->
+<!-- Revolving Satellites -->
 <div class="satellite">
-<div class="satellite-inner glass-panel p-6 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-xl">
-<div class="w-12 h-12 rounded-xl bg-emerald-500/10 flex items-center justify-center text-emerald-500 mb-4">
-<span class="material-symbols-outlined text-2xl" style="">eco</span>
-</div>
-<h3 class="text-lg font-bold mb-2 text-slate-900 dark:text-white" style="">Carbon Offset Settlement</h3>
+<div class="satellite-inner glass-panel p-6 rounded-3xl border border-white/20 shadow-2xl">
+<div class="w-12 h-12 rounded-2xl bg-emerald-500/10 flex items-center justify-center text-emerald-500 mb-4"><span class="material-symbols-outlined text-3xl" style="">eco</span></div>
+<h3 class="text-lg font-black mb-2 dark:text-white" style="">Carbon Settlement</h3>
 <p class="text-xs text-slate-600 dark:text-slate-400" style="">SUS can be used to offset carbon footprints by funding tree planting and biochar projects.</p>
 </div>
 </div>
-<!-- Satellite 2 -->
 <div class="satellite">
-<div class="satellite-inner glass-panel p-6 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-xl">
-<div class="w-12 h-12 rounded-xl bg-sky-500/10 flex items-center justify-center text-sky-500 mb-4">
-<span class="material-symbols-outlined text-2xl" style="">landscape</span>
-</div>
-<h3 class="text-lg font-bold mb-2 text-slate-900 dark:text-white" style="">Tokenized Access to Regenerative Farmland</h3>
-<p class="text-xs text-slate-600 dark:text-slate-400" style="">Gain fractional participation in regenerative agricultural land and moringa carbon farms.</p>
+<div class="satellite-inner glass-panel p-6 rounded-3xl border border-white/20 shadow-2xl">
+<div class="w-12 h-12 rounded-2xl bg-sky-500/10 flex items-center justify-center text-sky-500 mb-4"><span class="material-symbols-outlined text-3xl" style="">landscape</span></div>
+<h3 class="text-lg font-black mb-2 dark:text-white" style="">Farmland Access</h3>
+<p class="text-xs text-slate-600 dark:text-slate-400" style="">Gain fractional participation in regenerative agricultural land and carbon farms.</p>
 </div>
 </div>
-<!-- Satellite 3 -->
 <div class="satellite">
-<div class="satellite-inner glass-panel p-6 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-xl">
-<div class="w-12 h-12 rounded-xl bg-orange-500/10 flex items-center justify-center text-orange-500 mb-4">
-<span class="material-symbols-outlined text-2xl" style="">volunteer_activism</span>
-</div>
-<h3 class="text-lg font-bold mb-2 text-slate-900 dark:text-white" style="">Incentive for Climate Actions</h3>
+<div class="satellite-inner glass-panel p-6 rounded-3xl border border-white/20 shadow-2xl">
+<div class="w-12 h-12 rounded-2xl bg-orange-500/10 flex items-center justify-center text-orange-500 mb-4"><span class="material-symbols-outlined text-3xl" style="">volunteer_activism</span></div>
+<h3 class="text-lg font-black mb-2 dark:text-white" style="">Climate Incentives</h3>
 <p class="text-xs text-slate-600 dark:text-slate-400" style="">Earn rewards for verified activities such as planting trees or supporting soil restoration.</p>
 </div>
 </div>
-<!-- Satellite 4 -->
 <div class="satellite">
-<div class="satellite-inner glass-panel p-6 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-xl">
-<div class="w-12 h-12 rounded-xl bg-teal-500/10 flex items-center justify-center text-teal-500 mb-4">
-<span class="material-symbols-outlined text-2xl" style="">shopping_cart</span>
-</div>
-<h3 class="text-lg font-bold mb-2 text-slate-900 dark:text-white" style="">Marketplace Currency for the Green Economy</h3>
-<p class="text-xs text-slate-600 dark:text-slate-400" style="">The native payment token for climate-related products and services in the ecosystem.</p>
+<div class="satellite-inner glass-panel p-6 rounded-3xl border border-white/20 shadow-2xl">
+<div class="w-12 h-12 rounded-2xl bg-teal-500/10 flex items-center justify-center text-teal-500 mb-4"><span class="material-symbols-outlined text-3xl" style="">shopping_cart</span></div>
+<h3 class="text-lg font-black mb-2 dark:text-white" style="">Green Marketplace</h3>
+<p class="text-xs text-slate-600 dark:text-slate-400" style="">The native payment method for climate-related products and services in the ecosystem.</p>
 </div>
 </div>
-<!-- Satellite 5 -->
 <div class="satellite">
-<div class="satellite-inner glass-panel p-6 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-xl">
-<div class="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center text-primary mb-4">
-<span class="material-symbols-outlined text-2xl" style="">query_stats</span>
-</div>
-<h3 class="text-lg font-bold mb-2 text-slate-900 dark:text-white" style="">Carbon Data &amp; Traceability Infrastructure</h3>
+<div class="satellite-inner glass-panel p-6 rounded-3xl border border-white/20 shadow-2xl">
+<div class="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary mb-4"><span class="material-symbols-outlined text-3xl" style="">query_stats</span></div>
+<h3 class="text-lg font-black mb-2 dark:text-white" style="">Data Infrastructure</h3>
 <p class="text-xs text-slate-600 dark:text-slate-400" style="">Powers the system that verifies biomass sourcing and environmental impact across projects.</p>
 </div>
 </div>
-</div></div>
-</section>
-<section class="px-6 bg-white dark:bg-deep-forest relative overflow-hidden py-24 md:py-32" id="impact">
-<div class="absolute top-0 right-0 p-10 opacity-10 pointer-events-none">
-<span class="material-symbols-outlined text-[300px] text-primary" style="">public</span>
-</div>
-<div class="max-w-7xl mx-auto">
-<div class="flex flex-col gap-4 mb-16 max-w-2xl">
-<h2 class="text-3xl md:text-4xl font-black text-slate-900 dark:text-white tracking-tight" style="">The SUS Impact</h2>
-<p class="text-lg text-slate-600 dark:text-slate-300" style="">See how your digital actions translate into real-world ecological restoration through our transparent blockchain ledger.</p>
-</div>
-<div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-<div class="group relative p-8 rounded-2xl bg-background-light dark:bg-background-dark border border-slate-200 dark:border-slate-700 hover:border-primary transition-colors">
-<div class="absolute -top-6 left-8 text-slate-900 font-bold text-xl w-12 h-12 rounded-xl flex items-center justify-center shadow-lg" style="">1</div>
-<div class="mt-4 mb-6 text-slate-900 dark:text-white">
-<span class="material-symbols-outlined text-[48px] group-hover:scale-110 transition-transform duration-300 text-accent-orange" style="">currency_exchange</span>
-</div>
-<h3 class="text-xl font-bold mb-3 text-slate-900 dark:text-white" style="">Token Generation</h3>
-<p class="text-slate-600 dark:text-slate-400" style="">Earn SUS tokens for every contribution to green initiatives. Your digital footprint becomes a green thumbprint.</p>
-</div>
-<div class="group relative p-8 rounded-2xl bg-background-light dark:bg-background-dark border border-slate-200 dark:border-slate-700 hover:border-primary transition-colors">
-<div class="absolute -top-6 left-8 bg-slate-800 text-white dark:bg-slate-700 font-bold text-xl w-12 h-12 rounded-xl flex items-center justify-center shadow-lg group-hover:bg-primary group-hover:text-slate-900 transition-colors" style="">2</div>
-<div class="mt-4 mb-6 text-slate-900 dark:text-white">
-<span class="material-symbols-outlined text-[48px] group-hover:scale-110 transition-transform duration-300 text-accent-blue" style="">forest</span>
-</div>
-<h3 class="text-xl font-bold mb-3 text-slate-900 dark:text-white" style="">Environmental Restoration</h3>
-<p class="text-slate-600 dark:text-slate-400" style="">Directly fund reforestation projects and soil regeneration. We partner with vetted NGOs on the ground.</p>
-</div>
-<div class="group relative p-8 rounded-2xl bg-background-light dark:bg-background-dark border border-slate-200 dark:border-slate-700 hover:border-primary transition-colors">
-<div class="absolute -top-6 left-8 bg-slate-800 text-white dark:bg-slate-700 font-bold text-xl w-12 h-12 rounded-xl flex items-center justify-center shadow-lg group-hover:bg-primary group-hover:text-slate-900 transition-colors" style="">3</div>
-<div class="mt-4 mb-6 text-slate-900 dark:text-white">
-<span class="material-symbols-outlined text-[48px] group-hover:scale-110 transition-transform duration-300 text-accent-terracotta" style="">diversity_3</span>
-</div>
-<h3 class="text-xl font-bold mb-3 text-slate-900 dark:text-white" style="">Community Growth</h3>
-<p class="text-slate-600 dark:text-slate-400" style="">Empower local communities with sustainable income sources, creating a cycle of prosperity.</p>
-</div>
 </div>
 </div>
 </section>
-<section class="px-6 bg-white dark:bg-white/5 py-24 md:py-32">
+<!-- Scaling Impact Section -->
+<section class="px-6 py-24 md:py-32 bg-slate-50 dark:bg-deep-forest/20" id="impact">
 <div class="max-w-7xl mx-auto">
-<div class="flex flex-col items-center text-center gap-4 mb-16">
-<h2 class="text-3xl md:text-4xl font-black text-slate-900 dark:text-white tracking-tight" style="">Scaling Impact Across Africa</h2>
-<p class="text-lg text-slate-600 dark:text-slate-300 max-w-2xl" style="">Empowering every generation through measurable decarbonization and verifiable social impact.</p>
+<div class="flex flex-col lg:flex-row gap-16 items-center">
+<div class="flex-1">
+<h2 class="text-4xl md:text-5xl font-black text-slate-900 dark:text-white mb-8 tracking-tighter italic" style="">Scaling Impact</h2>
+<div class="space-y-8">
+<div class="flex gap-6 items-start">
+<div class="w-16 h-16 shrink-0 rounded-2xl bg-white dark:bg-slate-800 shadow-md flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-3xl" style="">groups</span>
 </div>
-<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-<div class="flex flex-col items-center text-center hover:-translate-y-1 transition-transform group">
-<div class="w-full h-64 rounded-2xl overflow-hidden mb-6 relative shadow-lg">
-<img alt="African Farmer" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDDq6eZ2FaO4ps0XuP8U8gFz3SfRmyOHQON9RCLMvelpEnida-woV1j0N1Lh_Pg2HyEzOup_YFTRv1_GRcOsaxYwFMNDbKAXiP1RVokzoH9DRRLmz2s6P5c5dqmgB-tfeT7EPoJqBJwkk_9omR6EX_ZOVuuXbvly1JHunuQCh_zaYo1Pgqamtmzzq_-gmJwECIT5Cu71A9ZiCAVGKft0EoosO5BJMQ6tZfG-xtXrb4s9omrimD0mG4rg3uJLtMMGwuFTqoTIJRfB9Q" style=""/>
-<div class="absolute inset-0 bg-gradient-to-t from-slate-900/80 to-transparent"></div>
-<div class="absolute bottom-4 left-4 text-left">
-<h3 class="text-xl font-bold text-white mb-1" style="">Farmer</h3>
-<div class="h-1 w-12 rounded-full"></div>
-</div>
-</div>
-<p class="text-sm text-slate-600 dark:text-slate-400 px-2" style="">Access to pre-financing and a new income pathway</p>
-</div>
-<div class="flex flex-col items-center text-center hover:-translate-y-1 transition-transform group">
-<div class="w-full h-64 rounded-2xl overflow-hidden mb-6 relative shadow-lg">
-<img alt="African Women" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBJ4AFJD1bx14pBOJuNkyLaKRtBZ8HK_tduJ7SGH6M4IXBOqVI0iyspwTQDrdrYuZdSEbqeH5lU3F4cG-UzEJHxzaEx0Wu_hI7k1a1n5r10ZHikW-bs8qGjlsIoWQLcfE1sJt24WJIW-Qk_9sMFNpq0mUBa1n7pc88BiXwekM3yYeov7swaSAKt2QEahDrXjXctfd90PoVENGsCGfjiBxUnEl2almxKhXRgNnOKt6yfGDWBixGQiC78AMjLmU0H7W8xOwkQy36FOFM" style=""/>
-<div class="absolute inset-0 bg-gradient-to-t from-slate-900/80 to-transparent"></div>
-<div class="absolute bottom-4 left-4 text-left">
-<h3 class="text-xl font-bold text-white mb-1" style="">Women</h3>
-<div class="h-1 w-12 rounded-full"></div>
+<div>
+<h3 class="text-xl font-bold mb-2" style="">Farmer Empowerment</h3>
+<p class="text-slate-600 dark:text-slate-400 leading-relaxed" style="">Providing tools and finance for African farmers to restore degraded soil and increase yields through regenerative practices.</p>
 </div>
 </div>
-<p class="text-sm text-slate-600 dark:text-slate-400 px-2" style="">Participation in climate finance and agricultural production without traditional barriers</p>
+<div class="flex gap-6 items-start">
+<div class="w-16 h-16 shrink-0 rounded-2xl bg-white dark:bg-slate-800 shadow-md flex items-center justify-center text-sky-500">
+<span class="material-symbols-outlined text-3xl" style="">diversity_1</span>
 </div>
-<div class="flex flex-col items-center text-center hover:-translate-y-1 transition-transform group">
-<div class="w-full h-64 rounded-2xl overflow-hidden mb-6 relative shadow-lg">
-<img alt="African Youth" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDqMy-o0PUVv6d7H7-83VKMleT5H81jw0VfgpC7_FbX912RPpFkLu1QwiH9gF9wLLY7mqG8DO2xsrUHLvNGMceU6NwW6Rbq_BfUvTrUBAfouHtjGAQxyia2aQZ2spIy418LC6ZPlaj1VsEZ-OSO08RP9fNvk26xVm3ab_SbC0thqiyph11lI_Wgl22eWgO7L9w0lnIRbC419kQ9i_WbnZ8arVTHPrJjaMiWiGCjZPxA34_3qRfL-Ige7NtQHw0-9oUcU9wrIRIUtRM" style=""/>
-<div class="absolute inset-0 bg-gradient-to-t from-slate-900/80 to-transparent"></div>
-<div class="absolute bottom-4 left-4 text-left">
-<h3 class="text-xl font-bold text-white mb-1" style="">Youth</h3>
-<div class="h-1 w-12 rounded-full"></div>
+<div>
+<h3 class="text-xl font-bold mb-2" style="">Inclusion &amp; Opportunity</h3>
+<p class="text-slate-600 dark:text-slate-400 leading-relaxed" style="">Dedicated programs for women, youth, and children to participate in the new green economy, ensuring no one is left behind in the climate transition.</p>
 </div>
 </div>
-<p class="text-sm text-slate-600 dark:text-slate-400 px-2" style="">A new type of youth-first economy</p>
-</div>
-<div class="flex flex-col items-center text-center hover:-translate-y-1 transition-transform group">
-<div class="w-full h-64 rounded-2xl overflow-hidden mb-6 relative shadow-lg">
-<img alt="African Child" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDwot49OfHOxRvqecX0VRhz4PTL2UoFjKeiMNz6zgX0p8Pk6jEQ55SSHfpjeXWzErAgsWrUZGvcBNdeNBe0cLX9XNEOKZ5-E3Fm4EYnjOZ4n8PvZoAEap4YmB7f5EQVJ6bBNk-Ie63tUmOvKUheFG3IIDA5KJ7sLdZbrnUWYujKWlCrC7_OGFv1cqyeSKoVa5_jfdYBkpYpZUchzDJTKhIGvF57y87-LE4Sg5ariIKCRH5gf05pSt-sv7Isbu_knYHOXTd-la3mVWA" style=""/>
-<div class="absolute inset-0 bg-gradient-to-t from-slate-900/80 to-transparent"></div>
-<div class="absolute bottom-4 left-4 text-left">
-<h3 class="text-xl font-bold text-white mb-1" style="">Child</h3>
-<div class="h-1 w-12 rounded-full"></div>
 </div>
 </div>
-<p class="text-sm text-slate-600 dark:text-slate-400 px-2" style="">Securing a healthier, cleaner future environment for the next generation.</p>
+<div class="flex-1 grid grid-cols-2 gap-4 w-full">
+<div class="aspect-square rounded-3xl overflow-hidden bg-slate-200 shadow-xl relative group col-span-2">
+<img alt="Northern Nigerian Farmer" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDwaYP5Cc_Mu2U09Kf3WLj_pIIl_R5RLnQ3jAXJsEjFdk2W5b_u5jdykyule_HGLDB9hs6ROiznpIykZL9iu1qgv7tHpd9pe9cUyO6FwJikVRXsfOb0m8TDuwZ2YDDregLgnP1PfAaJNN5fCQhNK_kVkgLjzt7IRifo3RUZWviwm_by3KHuayOkF1d7vu8kbsHzqF-b1V_D91Egg6L7GRzAXTFTVyjOwBH9a4TOY9hdmogxZiY78TK3XRs4438hdhu7NizvtMdM2Jo" style=""/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-end p-6">
+<p class="text-white font-bold" style="">Ibrahim, Northern Nigerian Farmer</p>
+</div>
+</div>
+<div class="aspect-square rounded-3xl overflow-hidden bg-slate-200 shadow-xl relative group">
+<img alt="African Women in Agriculture" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCgaCRTsCoBQhWf2mLImbCRs2EENMdtYgZZRsbWWvyVG2h1lPXXPA6rZrYetMyjCrxDo-cHbs-3QMkT5qzhYaXktK378oGXAa5Yyz8Rnau-rGdQofzsZaoyq7NeFk_lB0pYZyQuNoEBK3CLSSnaupUCXNIv-Q8kRqLasH6O9j1hifdEsZIIag-si6dgVsJOk6EMXqhlVVB_7jX1lBEAtiU9qGg3u1BY6W2fEVfflDmfEI-IwNVgG4MmrvzQoAHPovs-MoihE_sBcgU" style=""/>
+</div>
+<div class="aspect-square rounded-3xl overflow-hidden bg-slate-200 shadow-xl relative group">
+<img alt="Youth Climate Action" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC3AjQcxafKfg77I3pIu5jshXImT52t2ij3ysq-V8QjalpU-Le9PcVuO-FI5li6nqCzes7hLkYLoY5xewXasSqXOHifLBeHTR0MY7rRP11dNvasZp8cxEtxCq4XkhwbCdBHXRNWm3UUPPbbzgzibcS6gmG01nfYBh7pnM0gF9RAytjd3rK2RTZwhKcNFA3KPjqYdOK5Cf6rK2iSeN-kS12vURJ7YycS827qc0d1bXihxt3fKCjhF-avCHu7GCc1tZdBShqfjA75DkQ" style=""/>
+</div>
 </div>
 </div>
 </div>
 </section>
-<footer class="bg-[#f8fafc] dark:bg-deep-forest pt-16 pb-8 px-6 border-t border-slate-200 dark:border-emerald-900/50">
+<!-- Our Opportunity Section -->
+<section class="px-6 py-24 md:py-40 opportunity-gradient text-white overflow-hidden relative" id="opportunity">
+<div class="absolute inset-0 opacity-10 pointer-events-none">
+<svg class="w-full h-full" preserveaspectratio="none" viewbox="0 0 1000 1000">
+<path class="staggered-path" d="M0,500 C200,300 400,700 600,500 C800,300 1000,700 1000,500" fill="none" stroke="white" stroke-width="2"></path>
+<path class="staggered-path" d="M0,600 C200,400 400,800 600,600 C800,400 1000,800 1000,600" fill="none" stroke="white" stroke-width="1" style="animation-delay: -2s"></path>
+</svg>
+</div>
+<div class="max-w-7xl mx-auto relative z-10">
+<div class="text-center mb-24">
+<h2 class="text-5xl md:text-7xl font-black mb-8 tracking-tighter italic" style="">
+<span class="text-emerald-300" style="">Our</span>
+<span class="text-sky-400" style="">Infinite</span>
+<span class="text-accent-orange" style="">Opportunity</span>
+</h2>
+<p class="text-xl md:text-2xl text-emerald-100/90 max-w-4xl mx-auto leading-relaxed font-medium" style="">
+                Africa sits at the epicenter of a <span class="text-primary font-bold" style="">multi-trillion dollar</span> climate and economic revolution. We are the bridge.
+            </p>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-0 items-center">
+<!-- Left: Digital Realm -->
+<div class="lg:col-span-5 space-y-12">
+<div class="glass-panel p-8 md:p-10 rounded-[2.5rem] border-white/10 transform hover:scale-[1.02] transition-transform duration-500 shadow-2xl relative overflow-hidden group">
+<div class="absolute top-0 right-0 w-32 h-32 bg-sky-500/10 blur-3xl -mr-16 -mt-16 group-hover:bg-sky-500/20 transition-colors"></div>
+<div class="flex items-start gap-6">
+<div class="w-16 h-16 shrink-0 rounded-2xl bg-gradient-to-br from-sky-400 to-sky-600 flex items-center justify-center text-white shadow-lg">
+<span class="material-symbols-outlined text-3xl" style="">devices</span>
+</div>
+<div>
+<h3 class="text-3xl font-black mb-3 text-sky-300 tracking-tight leading-none" style="">5B+ Digital Screens</h3>
+<p class="leading-relaxed text-black dark:text-slate-200" style="">The global workforce is already digital. We turn latent "screen-time" into a high-frequency channel for global climate participation.</p>
+</div>
+</div>
+</div>
+<div class="glass-panel p-8 md:p-10 rounded-[2.5rem] border-white/10 transform translate-x-4 hover:translate-x-6 transition-transform duration-500 shadow-2xl relative overflow-hidden group">
+<div class="absolute top-0 right-0 w-32 h-32 bg-primary/10 blur-3xl -mr-16 -mt-16 group-hover:bg-primary/20 transition-colors"></div>
+<div class="flex items-start gap-6">
+<div class="w-16 h-16 shrink-0 rounded-2xl bg-gradient-to-br from-primary to-emerald-600 flex items-center justify-center text-white shadow-lg">
+<span class="material-symbols-outlined text-3xl" style="">travel_explore</span>
+</div>
+<div>
+<h3 class="text-3xl font-black mb-3 text-primary tracking-tight leading-none" style="">Global Climate Intent</h3>
+<p class="leading-relaxed text-black dark:text-slate-200" style="">Billions want to help, but lack access. Sustave provides the infrastructure to convert intent into verified, soil-deep impact.</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Center: The Core/Bridge Visual -->
+<div class="lg:col-span-2 flex justify-center py-12 lg:py-0 relative">
+<div class="relative group">
+<!-- Rotating Ring -->
+<div class="absolute inset-0 w-48 h-48 -m-12 border-4 border-dashed border-emerald-500/30 rounded-full animate-[spin_20s_linear_infinite]"></div>
+<div class="absolute inset-0 w-64 h-64 -m-20 border-2 border-white/10 rounded-full animate-[spin_30s_linear_infinite_reverse]"></div>
+<div class="w-32 h-32 md:w-40 md:h-40 rounded-full bg-gradient-to-tr from-emerald-500 to-primary p-1 shadow-[0_0_60px_rgba(16,185,129,0.4)] relative z-20 flex items-center justify-center">
+<div class="w-full h-full rounded-full bg-deep-forest flex items-center justify-center">
+<span class="material-symbols-outlined text-5xl md:text-6xl text-white animate-pulse" style="">hub</span>
+</div>
+</div>
+<div class="absolute top-full mt-8 left-1/2 -translate-x-1/2 whitespace-nowrap text-center">
+<span class="text-xs font-black uppercase tracking-[0.4em] text-emerald-400/60 block mb-2" style="">The Convergence</span>
+<h4 class="text-xl font-bold text-white uppercase tracking-wider" style="">Screen2Green Bridge</h4>
+</div>
+</div>
+</div>
+<!-- Right: African Frontier -->
+<div class="lg:col-span-5 space-y-12">
+<div class="glass-panel p-8 md:p-10 rounded-[2.5rem] border-white/10 transform -translate-x-4 hover:-translate-x-6 transition-transform duration-500 shadow-2xl relative overflow-hidden group">
+<div class="absolute top-0 left-0 w-32 h-32 bg-orange-500/10 blur-3xl -ml-16 -mt-16 group-hover:bg-orange-500/20 transition-colors"></div>
+<div class="flex items-start gap-6 text-right flex-row-reverse">
+<div class="w-16 h-16 shrink-0 rounded-2xl bg-gradient-to-br from-accent-orange to-accent-terracotta flex items-center justify-center text-white shadow-lg">
+<span class="material-symbols-outlined text-3xl" style="">landscape</span>
+</div>
+<div>
+<h3 class="text-3xl font-black mb-3 text-orange-400 tracking-tight leading-none" style="">65% Arable Land</h3>
+<p class="leading-relaxed text-black dark:text-slate-200" style="">Africa is the world's lung and breadbasket. We unlock the capital needed to restore millions of hectares of degraded soil.</p>
+</div>
+</div>
+</div>
+<div class="glass-panel p-8 md:p-10 rounded-[2.5rem] border-white/10 transform hover:scale-[1.02] transition-transform duration-500 shadow-2xl relative overflow-hidden group">
+<div class="absolute top-0 left-0 w-32 h-32 bg-teal-500/10 blur-3xl -ml-16 -mt-16 group-hover:bg-teal-500/20 transition-colors"></div>
+<div class="flex items-start gap-6 text-right flex-row-reverse">
+<div class="w-16 h-16 shrink-0 rounded-2xl bg-gradient-to-br from-teal-400 to-teal-600 flex items-center justify-center text-white shadow-lg">
+<span class="material-symbols-outlined text-3xl" style="">agriculture</span>
+</div>
+<div>
+<h3 class="text-3xl font-black mb-3 text-teal-300 tracking-tight leading-none" style="">Decentralized Farms</h3>
+<p class="leading-relaxed text-black dark:text-slate-200" style="">Our network of decentralized climate farms creates a scalable, investable engine for verified carbon removal and local job creation.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="mt-32 grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+<div class="space-y-8">
+<p class="text-2xl md:text-3xl font-bold leading-snug text-emerald-50" style="">
+                    Screen2Green isn't just a platform; it's the <span class="text-sky-400 italic" style="">operating system</span> for the new green economy.
+                </p>
+<p class="text-lg text-emerald-100/70 leading-relaxed border-l-2 border-primary/40 pl-8" style="">
+                    By mobilizing digital participation to finance land restoration, we unlock a generation of climate-driven agricultural value chains. We are turning a global crisis into a local engine for wealth and health across the continent.
+                </p>
+</div>
+<div class="relative">
+<div class="glass-panel p-12 rounded-[3rem] border-white/10 relative z-10 bg-white/5 backdrop-blur-3xl shadow-[0_20px_50px_rgba(0,0,0,0.3)] border-t-2 border-t-emerald-500/30">
+<span class="material-symbols-outlined text-6xl text-primary mb-8 block" style="">format_quote</span>
+<h3 class="text-3xl font-black mb-6 text-white leading-tight" style="">The Global Engine</h3>
+<p class="text-2xl text-black dark:text-slate-100 italic font-light leading-relaxed" style="">
+                        "Screen2Green positions Africa not merely as a climate beneficiary, but as a <span class="text-accent-orange font-bold not-italic" style="">global engine</span> for scalable, verifiable, and economically viable decarbonization."
+                    </p>
+</div>
+<!-- Decorative element behind quote -->
+<div class="absolute -bottom-6 -right-6 w-full h-full bg-primary/20 rounded-[3rem] -z-10 blur-xl"></div>
+</div>
+</div>
+</div>
+</section>
+<!-- Footer -->
+<footer class="bg-background-light dark:bg-background-dark py-24 px-6 border-t border-slate-200 dark:border-white/5">
 <div class="max-w-7xl mx-auto">
-<div class="flex flex-col md:flex-row justify-between items-center gap-10 mb-12">
-<div class="flex items-center gap-2">
-<img alt="Screen2Green Logo" class="h-10 w-auto" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBemCAadPkrUdDO1VTbW28jwbsaltmwGa82zzTpqpigTkcVL5XL6549IARfvDHrY1R_Bz0DSwkgeQuG9zO-uCdh635uPHB3-TF9g15-X0xbJVMSlQQRdCoZ1p8m92Bexv_O8tdam8HKNi-TKtHW4qFHVB_YbQ02jiwcQv7bdUFfghNdZ1eNb6Veb_GYcIS4y2I5wg37H5pGdklqir_brKlgJltGl_5Cshv5bG_p0PZZFCsz-3vvmTRR2sPxCnJJizhg7X1NMkEp0-I" style=""/>
-</div>
-<div class="flex flex-wrap justify-center gap-8 md:gap-12 opacity-50 grayscale hover:grayscale-0 transition-all duration-500">
-<div class="flex items-center gap-2 font-bold text-xl text-slate-700 dark:text-slate-300" style="">
-<span class="material-symbols-outlined" style="">radar</span> Rada360
-                         </div>
-<div class="flex items-center gap-2 font-bold text-xl text-slate-700 dark:text-slate-300">
-<img alt="Screen2Green Logo" class="h-6 w-auto grayscale" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCqpx8hkcRZ83rMGULLbJvPkueiCTYSulh0mWC-4-f1zVECwL313oXpcYEjxFtJTbk7bRbuAzE3emF1gJO4iRx68zJHXCuWr9Nnc4qVuuoRVNEV-_NK9zdC923hQQw5dC_Tho-I89CizX6pfV7NFYN9_6pOSs9PB_tmL7Eb06NbIzLZccYTYMkp1LCo4axMORkafKPROalam4y75GCtecCdRigOHmfzhjgOPPCTAOgEcEV8tZPv5A4CTcCNwu8uZjdOzSJVOg0Vk4M" style=""/>
-</div>
-<div class="flex items-center gap-2 font-bold text-xl text-slate-700 dark:text-slate-300" style="">
-<svg class="w-6 h-6 fill-current" viewbox="0 0 24 24"><path d="M12.48 10.92v3.28h7.84c-.24 1.84-.853 3.187-1.787 4.133-1.147 1.147-2.933 2.4-6.053 2.4-4.827 0-8.6-3.893-8.6-8.72s3.773-8.72 8.6-8.72c2.6 0 4.507 1.027 5.907 2.347l2.307-2.307C18.747 1.44 16.133 0 12.48 0 5.867 0 .307 5.387.307 12s5.56 12 12.173 12c3.573 0 6.267-1.173 8.373-3.36 2.16-2.16 2.84-5.213 2.84-7.667 0-.76-.053-1.467-.173-2.053H12.48z"></path></svg> Google
-                         </div>
-</div>
-</div>
-<div class="border-t border-slate-200 dark:border-slate-800 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-slate-500 dark:text-slate-400">
-<p class="" style="">© 2024 Sustave. All rights reserved.</p>
-<div class="flex gap-6">
-<a class="hover:text-primary transition-colors" href="#" style="">Privacy Policy</a>
-<a class="hover:text-primary transition-colors" href="#" style="">Terms of Service</a>
-<a class="hover:text-primary transition-colors" href="#" style="">Cookies</a>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 items-start">
+<!-- Brand & Mission -->
+<div class="lg:col-span-2 space-y-8">
+<a class="inline-block" href="#">
+<img alt="Sustave Logo" class="h-10 w-auto" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBVJ8EumNWzcgbW3OM1iEsJ-HF636P8DCAhGBhKJqzV0IwqImZ1WrMz-1jA_pnJx6u5lVf6Fx4JdewtSrlquA2WpAXBMJcN1SOX56LAbOm3r6c3y5Up1iFHkWXhCvm42trTQ-9Rm99bcrCdKqOXs6oqYnGAY0Olfth0NQTWbe1kPu5xFDkIUt55VxpAHP1u1zXWm0eze5UmVWh5b1vmo9nn-ftF7h2mZkD7IOG-RxsDmypkJY4cEACGSyjngyLJHjEnO6qAVne7zvY"/>
+</a>
+<p class="text-slate-600 dark:text-slate-400 max-w-md text-lg leading-relaxed">
+                        Pioneering the convergence of digital participation and regenerative agriculture to scale planetary restoration.
+                    </p>
+<div class="flex items-center gap-6">
+<a class="text-slate-400 hover:text-primary transition-colors" href="#"><span class="material-symbols-outlined">language</span></a>
+<a class="text-slate-400 hover:text-primary transition-colors" href="#"><span class="material-symbols-outlined">public</span></a>
+<a class="text-slate-400 hover:text-primary transition-colors" href="#"><span class="material-symbols-outlined">forum</span></a>
 </div>
 </div>
+<!-- Partners -->
+<div class="space-y-6">
+<h4 class="text-xs font-black uppercase tracking-[0.2em] text-slate-400" style="">Key Partners</h4>
+<div class="grid grid-cols-2 gap-6 items-center grayscale opacity-60 hover:grayscale-0 hover:opacity-100 transition-all duration-500">
+<img alt="Restor.co" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCH010y8X_T8_nI_yE6YvK7rO_Tj9lG-R3e_XvD_vJvW_X8P_R3e_XvD_vJvW_X8P_R3e_XvD_vJvW_X8P_R3e_XvD_vJvW_X8P_R3e_XvD_vJvW_X8P_R3e_XvD_vJvW_X8"/>
+<img alt="Rada360" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC_v_n-Y8_v_n-Y8_v_n-Y8_v_n-Y8_v_n-Y8_v_n-Y8_v_n-Y8_v_n-Y8_v_n-Y8_v_n-Y8_v_n-Y8_v_n-Y8_v_n-Y8_v_n-Y8_v_n-Y8_v_n-Y8_v_n-Y8"/>
+<img alt="Sustave" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBVJ8EumNWzcgbW3OM1iEsJ-HF636P8DCAhGBhKJqzV0IwqImZ1WrMz-1jA_pnJx6u5lVf6Fx4JdewtSrlquA2WpAXBMJcN1SOX56LAbOm3r6c3y5Up1iFHkWXhCvm42trTQ-9Rm99bcrCdKqOXs6oqYnGAY0Olfth0NQTWbe1kPu5xFDkIUt55VxpAHP1u1zXWm0eze5UmVWh5b1vmo9nn-ftF7h2mZkD7IOG-RxsDmypkJY4cEACGSyjngyLJHjEnO6qAVne7zvY"/>
+<img alt="Google" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD6NJPIKRTvZ6loQ_3M3QFnTVUCWKC4qnTlAXm1tc4P8VdskSnwSYpdJD2qCNA_VgtKfgmGuFxXLqCsHbS8JAUwfw7CnOBmMy7iiefd52C8HU5AR8pSn3H5ISZ-ZPdHndBEeNpebDJv7DyqCzKlKomwLZPcFXpFBk4t_dMljusBWgaBkYZd8S7w6cJHyoYCPp0p2-Z3o7Al8_9SivppbmCOj9X12BH19LXU8TMWfmxUdkzmnT7MZ1V-wf3bCwH3xHaX7c2jHZvdu44"/>
 </div>
-</footer>
 </div>
-</body></html>
+<!-- Contact -->
+<div class="space-y-6">
+<h4 class="text-xs font-black uppercase tracking-[0.2em] text-slate-400" style="">Inquiries</h4>
+<a class="inline-flex items-center gap-3 group" href="mailto:screen2green@sustave.com">
+<div class="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white transition-all">
+<span class="material-symbols-outlined">mail</span>
+</div>
+<div>
+<p class="text-xs font-bold text-slate-400 uppercase mb-1" style="">Write to us</p>
+<p class="text-slate-900 dark:text-white font-bold group-hover:text-primary transition-colors" style="">screen2green@sustave.com</p>
+</div>
+</a>
+</div>
+</div>
+<div class="mt-24 pt-8 border-t border-slate-200 dark:border-white/5 flex flex-col md:flex-row justify-between items-center gap-6">
+<p class="text-sm text-slate-500 dark:text-slate-500">© 2024 Sustave. All rights reserved. Turning screen time into green time.</p>
+</div></div></footer></div></body></html>
